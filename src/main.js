@@ -9,10 +9,16 @@ import Vuex from 'vuex'
 import store from './store'
 import echarts from 'echarts'
 import vueSwiper from 'vue-awesome-swiper'
+import VCharts from 'v-charts'
 import 'swiper/css/swiper.css'
+
+import axios from '@/kits/http'
+
 
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
+Vue.prototype.$http = axios
+Vue.use(VCharts)
 Vue.use(Vuex)
 Vue.use(vueSwiper)
 Vue.use(ElementUI,{

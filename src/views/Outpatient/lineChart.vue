@@ -5,7 +5,6 @@
 import echarts from 'echarts'
 require('echarts/theme/macarons') // echarts theme
 export default {
-
     props: {
         Width: {
             type: String,
@@ -28,7 +27,6 @@ export default {
             {name: "红武", data:[1321,6534,3454,5422,6454,5345,8646,1323,2345]},
             {name: "干田", data:[3234,2434,5343,4325,5345,3432,7456,2467,8974]}
         ],
-        list:["吕合","中屯","白土","回龙","斗阁","红武","干田"],
         date:["1-1","1-2","1-3","1-4","1-5","1-6","1-7","1-8","1-9"]
     }
     },

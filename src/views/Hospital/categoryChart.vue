@@ -1,79 +1,79 @@
 <template>
-  <div :style="{height:Height,width:Width}"/>
+  <div :style="{height:Height,width:Width}" />
 </template>
+
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
+import echarts from "echarts";
+require("echarts/theme/macarons"); // echarts theme
+
 export default {
-
-    props: {
-        Width: {
-            type: String,
-            default: '100%'
-        },
-        Height: {
-            type: String,
-            default: '260px'
-        }
+  props: {
+    Width: {
+      type: String,
+      default: "100%"
     },
-    data() {
-    return {
-        chart: null,
-        items:[10, 52, 200, 334, 390, 330, 220,329,183],
-        date:["1-1","1-2","1-3","1-4","1-5","1-6","1-7","1-8","1-9"]
+    Height: {
+      type: String,
+      default: "260px"
+    },
+    items: {
+      type: Array,
+      default: []
     }
-    },
-    mounted() {
-        this.$nextTick(() => {
-            this.initChart()
-
-    })
+  },
+  data() {
+    return {
+      chart: null,
+      date: [],
+      amounts: []
+    };
+  },
+  watch: {
+    items(val) {
+      this.$nextTick(() => {
+        this.date = val.map(x => x.date);
+        this.amounts = val.map(x => x.amount);
+        this.initChart();
+      });
+    }
   },
   methods: {
-      // 图表初始化数据
-      initChart() {
-        this.chart = echarts.init(this.$el, 'macarons');
-        this.chart.setOption({
-         color: ['#3ba1ff'],
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
-    },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis: [
-        {
-            type: 'category',
+    // 图表初始化数据
+    initChart() {
+      this.chart = echarts.init(this.$el, "macarons");
+      this.chart.setOption({
+        color: ["#3ba1ff"],
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            // 坐标轴指示器，坐标轴触发有效
+            type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+          }
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: "category",
             data: this.date,
-            axisTick: {
-                alignWithLabel: true
-            }
-        }
-    ],
-    yAxis: [
-        {
-            type: 'value'
-        }
-    ],
-    series: [
-        {
-            name: '收入',
-            type: 'bar',
-            barWidth: '60%',
-            data: this.items
-        }
-    ]
-      })
-      }
+            axisTick: { alignWithLabel: true }
+          }
+        ],
+        yAxis: [{ type: "value" }],
+        series: [
+          {
+            name: "金额",
+            type: "bar",
+            barWidth: "60%",
+            data: this.amounts
+          }
+        ]
+      });
+    }
   }
-}
+};
 </script>
-<style lang="scss">
-
-</style>
