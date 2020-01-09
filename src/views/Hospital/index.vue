@@ -112,13 +112,13 @@ export default {
                 .swiper-container {
                     .swiper-wrapper {
                         .swiper-slide {
-                             .el-card:hover {
-                                    background:#f2f2f2;
-                                    cursor: pointer;
-                                    .el-progress {
-                                        opacity: 1 !important;
-                                    }
+                            .el-card:hover {
+                                background:#f2f2f2;
+                                cursor: pointer;
+                                .el-progress {
+                                    opacity: 1 !important;
                                 }
+                            }
                             .el-card {
                                  .box-card-conter {
                                      top: 25%;
