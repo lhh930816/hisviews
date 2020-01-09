@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
+import actions from './actions';
+import mutations from './mutations';
 import persistedState from 'vuex-persistedstate'
 Vue.use(Vuex)
 
@@ -18,9 +20,14 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 }, {})
 
 const store = new Vuex.Store({
+  actions,
+  mutations,
   modules,
   getters,
-  plugins: [persistedState({ storage: window.sessionStorage })]
+  plugins: [persistedState({
+    storage: window.sessionStorage
+  })],
+  strict: process.env.NODE_ENV !== 'production'
 })
 
 export default store
