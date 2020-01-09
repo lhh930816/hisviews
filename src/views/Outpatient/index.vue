@@ -10,12 +10,13 @@
                     <div class="card-panel-description">
                         <el-card class="box-card">
                             <div slot="header" class="clearfix">
-                                <span>乡镇医院一  </span>
+                                <span>门诊收入总额</span>
                                 <span>总额:</span> 
                                 <count-to :start-val="0" :end-val="123456.42" :duration="2600" :decimals='0' class="card-panel-num"/>
                                 <span>元</span>
                             </div>
                             <div class="box-card-conter">
+
                             </div>
                         </el-card>
                     </div>
@@ -26,6 +27,7 @@
 </template>
 <script>
 import CountTo from 'vue-count-to'
+
 export default {
     components: {
         CountTo

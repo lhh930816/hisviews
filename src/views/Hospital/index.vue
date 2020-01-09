@@ -17,7 +17,7 @@
                             </div>
                             <div class="box-card-conter">
                                 <swiper :options='swiperOption'>
-                                    <swiper-slide v-for="item in list.items" :key="item.name">
+                                    <swiper-slide v-for="item in list.items" :key="item.name" >
                                         <el-card shadow="always">
                                                 <div class="swiper-slide-left">
                                                     <p style="margin-top:0; text-align: left;">{{item.name}}</p>
@@ -53,6 +53,7 @@
 import CountTo from 'vue-count-to'
 import Swiper from 'swiper'
 import categoryChart from './categoryChart'
+import "@/styles/index.scss"
 export default {
     components: {
         CountTo,
@@ -86,6 +87,9 @@ export default {
                 ]
             }
         }
+    },
+    methods: {
+        
     }
 }
 </script>
@@ -98,6 +102,7 @@ export default {
         .page-content{
             margin:0px 40px 40px;
             background: white;
+            height: 790px;
             .page-main {
                 .clearfix {
                     text-align: left;
@@ -153,8 +158,7 @@ export default {
     .swiper-button-next,.swiper-button-prev {
         outline:0 none !important;
     }
-    .el-tabs_header {
-        margin-left: 20px;
-    }
 }
+
+
 </style>

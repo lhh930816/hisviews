@@ -21,8 +21,8 @@ export default {
         default: '220px'
         },
         item: {
-            type: Object,
-            default: {}
+            type: Array,
+            default: []
         }
     },
     data() {

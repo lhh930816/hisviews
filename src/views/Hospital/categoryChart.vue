@@ -19,8 +19,8 @@ export default {
     data() {
     return {
         chart: null,
-        item:[20,45,32,18,49,69],
-        items:[-23,-53,-63,-19,-70,-30]
+        items:[10, 52, 200, 334, 390, 330, 220,329,183],
+        date:["1-1","1-2","1-3","1-4","1-5","1-6","1-7","1-8","1-9"]
     }
     },
     mounted() {
@@ -34,7 +34,7 @@ export default {
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons');
         this.chart.setOption({
-         color: ['#3398DB'],
+         color: ['#3ba1ff'],
     tooltip: {
         trigger: 'axis',
         axisPointer: {            // 坐标轴指示器，坐标轴触发有效
@@ -50,7 +50,7 @@ export default {
     xAxis: [
         {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            data: this.date,
             axisTick: {
                 alignWithLabel: true
             }
@@ -63,10 +63,10 @@ export default {
     ],
     series: [
         {
-            name: '直接访问',
+            name: '收入',
             type: 'bar',
             barWidth: '60%',
-            data: [10, 52, 200, 334, 390, 330, 220]
+            data: this.items
         }
     ]
       })

@@ -8,9 +8,10 @@
                         <div class="card-panel-description">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
-                                    <span>各医院门诊挂号人数实时情况    </span>
+                                    <span>慢性累计费用及人数</span>
                                 </div>
                                 <div class="box-card-conter">
+                                    <line-chart/>
                                 </div>
                             </el-card>
                         </div>
@@ -100,7 +101,7 @@
                                         <pie-chart :item="list"/>
                                     </el-tab-pane>
                                     <el-tab-pane label="乡镇二" name="second">
-                                         <pie-chart :item="data"/>
+                                        <pie-chart :item="data"/>
                                     </el-tab-pane>
                                 </el-tabs>
                                 </div>
@@ -119,13 +120,15 @@ import weekChart from './components/weekChart'
 import barChart from './components/barChart'
 import dosageChart from './components/dosageChart'
 import pieChart from './components/pieChart'
+import lineChart from './components/lineChart'
 export default {
     components: {
         PanelGroup,
         weekChart,
         barChart,
         dosageChart,
-        pieChart
+        pieChart,
+        lineChart
     },
     data () {
         return {
