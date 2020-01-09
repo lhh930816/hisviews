@@ -25,7 +25,7 @@
               </div>
               <div class="box-card-conter">
                 <swiper :options="swiperOption">
-                  <swiper-slide v-for="item in list.items" :key="item.name">
+                  <swiper-slide v-for="item in list.items" :key="item.name" @click.native="selectSwiperItem(item)">
                     <el-card shadow="always">
                       <div class="swiper-slide-left">
                         <p style="margin-top:0; text-align: left;">{{item.name}}</p>
@@ -63,53 +63,77 @@
           </div>
         </div>
         <el-tabs>
-          <el-tab-pane label="医院二门诊收入额">
-            <categoryChart />
+          <el-tab-pane :label="tenant.name +' 门诊收入额'">
+            <categoryChart :items="tenant.items" />
           </el-tab-pane>
         </el-tabs>
       </div>
     </div>
   </div>
 </template>
+
 <script>
-import CountTo from 'vue-count-to'
-import Swiper from 'swiper'
-import categoryChart from './categoryChart'
+import CountTo from "vue-count-to";
+import Swiper from "swiper";
+import categoryChart from "./categoryChart";
+import "@/styles/index.scss";
+
 export default {
-    components: {
-        CountTo,
-        categoryChart
-    },
-    data () {
-        return {
-            swiperOption: {
-                slidesPerView : 5,
-                spaceBetween : 30,
-                loop: false,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev'
-                }
-            },
-            list:{
-                name: "云南",
-                amount:0,
-                items:[]
-            }
+  components: {
+    CountTo,
+    categoryChart
+  },
+  data() {
+    return {
+      swiperOption: {
+        slidesPerView: 5,
+        spaceBetween: 30,
+        loop: false,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev"
         }
+      },
+      list: {
+        name: "云南",
+        amount: 0,
+        items: []
+      },
+      tenant: {
+        name: "云南",
+        items: []
+      }
+    };
+  },
+  mounted() {
+    this.getVillageList();
+  },
+  methods: {
+    selectSwiperItem(item) {
+      let that = this;
+      that.$http
+        .post("api/VillageIncome/IncomeDetail/IncomeDetail", {
+          TenantId: item.id
+        })
+        .then(res => {
+          that.tenant.name = item.name || "";
+          that.tenant.items = res.items || [];
+        });
     },
-    mounted() {
-        this.getVillageList();
-    },
-    methods: {
-        getVillageList() {
-            let that = this;
-            that.$http.post("/api/VillageIncome/IncomeSummary/IncomeSummary", { TenantId: 532300250 }).then(res => {
-                that.list = res;
-            });
-        }
+    getVillageList() {
+      let that = this;
+      that.$http
+        .post("/api/VillageIncome/IncomeSummary/IncomeSummary", {
+          TenantId: 532300250
+        })
+        .then(res => {
+          that.list = res;
+
+          that.selectSwiperItem(that.list.items[0]);
+        });
     }
-}
+  }
+};
 </script>
 <style lang="scss" scoped>
 .page-content-wrapper {
@@ -120,6 +144,7 @@ export default {
   .page-content {
     margin: 0px 40px 40px;
     background: white;
+    height: 790px;
     .page-main {
       .clearfix {
         text-align: left;
@@ -173,9 +198,6 @@ export default {
   .swiper-button-next,
   .swiper-button-prev {
     outline: 0 none !important;
-  }
-  .el-tabs_header {
-    margin-left: 20px;
   }
 }
 </style>

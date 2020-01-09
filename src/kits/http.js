@@ -27,8 +27,8 @@ var service = axios.create(opts);
  */
 service.interceptors.request.use(
   config => {
-    let token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFkbWluIiwiUGFzc1dvcmQiOiIxMjM0NTYiLCJQS0VZIjoiYjc2ZjhmMzZiMjU1MjI1OWFmY2UwNWQ4OGY2NGEwOGMiLCJuYmYiOjE1Nzg1NDAwNTUsImV4cCI6MTU3ODU0MzY1NCwiaWF0IjoxNTc4NTQwMDU1LCJpc3MiOiJ4a2hpcyIsImF1ZCI6ImlkZW50aXR5In0.2SoUqa0vP3Lby9_9zGAfTIoSPddv2q_TzGKIe8mjpX8";
-      config.headers.Authorization = token;
+    let token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFkbWluIiwiUGFzc1dvcmQiOiIxMjM0NTYiLCJQS0VZIjoiYjc2ZjhmMzZiMjU1MjI1OWFmY2UwNWQ4OGY2NGEwOGMiLCJuYmYiOjE1Nzg1NTU2MzgsImV4cCI6MTU3ODU1OTIzNywiaWF0IjoxNTc4NTU1NjM4LCJpc3MiOiJ4a2hpcyIsImF1ZCI6ImlkZW50aXR5In0.zy6D5E8bEILGzYZf2SCitH6dhhduOC96cDGx7AqaTLg";
+    config.headers.Authorization = token;
     return config;
   },
   error => {

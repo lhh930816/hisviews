@@ -51,11 +51,11 @@ export default {
                     type: "line"
                 },
                 {
-                    title:"重大疾病人数",
+                    title:"收费人数",
                     sum: 543,
                     devoteY:[5,40,18,26,12],         
                     devoteX:['2019-12-10','2019-12-11','2019-12-12','2019-12-13','2019-12-14'],
-                    label: "日诊断量",
+                    label: "日收费量",
                     num: 10,
                     color: "#975fe4",
                     type: "line"

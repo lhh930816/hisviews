@@ -1,0 +1,11 @@
+.page-main {
+    .el-tabs {
+        .el-tabs__header {
+            margin-left: 20px;
+            .el-tabs__item {
+                outline:0 none !important;
+                margin: 20px 0; 
+            }
+        }
+    }
+}
