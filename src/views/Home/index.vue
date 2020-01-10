@@ -27,17 +27,17 @@
                                 <div class="box-card-conter">
                                   <img src="../../icons/u198.png" class="human">
                                   <div class="box-card-right">
-                                    <div class="box-card-text" v-for="(item, index) in items" :key='item.name'>
+                                    <div class="box-card-text" v-for="(item, index) in items" :key='item.diseaseMC'>
                                         <div class="box-card-top">
-                                            <span style="display: inline-block; width: 80px; text-align: right; margin-right: 20px;">{{item.scale}}%</span>
-                                            <span :class="item.compare > 1 ? 'box-card-compare':'box-card-compare-span'">{{item.compare}}%<i :class="item.compare > 1 ? 'el-icon-top':'el-icon-bottom'"></i></span> 
+                                            <span style="display: inline-block; width: 80px; text-align: right; margin-right: 20px;">{{item.diseaseRatio.toFixed(2)}}%</span>
+                                            <span :class="item.diseaseMOY > 1 ? 'box-card-compare':'box-card-compare-span'">{{item.diseaseMOY}}%<i :class="item.diseaseMOY > 1 ? 'el-icon-top':'el-icon-bottom'"></i></span> 
                                             <span>同比</span> 
                                         </div>
                                         <img v-if="index == 0" src="../../icons/u200.png" alt="">
                                         <img v-else-if="index == items.length-1" src="../../icons/u206.png" alt="">
                                         <img v-else src="../../icons/u208.png" alt="" style="height:1px;">
                                         <div class="box-card-bottom">
-                                            <span>{{item.name}}</span>
+                                            <span>{{item.diseaseMC}}</span>
                                         </div>
                                     </div>
                                   </div>
@@ -79,7 +79,7 @@
                         <div class="card-panel-description">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
-                                    <span>门诊药品用量占比</span>
+                                    <span>门诊药品类别占比</span>
                                 </div>
                                 <div class="box-card-conter">
                                     <dosage-Chart />
@@ -132,12 +132,7 @@ export default {
     },
     data () {
         return {
-            items: [
-                {name:'肺炎',scale:"25",compare:"1.5"},
-                {name:'过敏性鼻炎',scale:"20",compare:"-1.2"},
-                {name:'哮喘',scale:"15",compare:"2.3"},
-                {name:'扁桃体发炎',scale:"10",compare:"3.8"}
-            ],
+            items: [],
             activeName: 'first',
             list:  [
                 { value: 4580, name: '东华' },
@@ -159,7 +154,21 @@ export default {
             ]
         }
     },
+    mounted(){
+        this.getIllness();
+    },
     methods:{
+        //疾病
+        getIllness(){
+            this.$http
+                .post("/api/RegulatoryReport/GetOutpatientDiseaseInfo",{
+                    summaryDate: new Date(),
+                    tenantId: 0
+                })
+                .then(res => {
+                   this.items = res.outpatientDiseaseDetail;
+                })
+        },
         handleClick(tab, event) {
             console.log(tab, event);
         }
@@ -252,7 +261,7 @@ export default {
                                         float: left;
                                         font-size: 14px;
                                         .box-card-text {
-                                            padding: 5px 0;
+                                            padding: 12px 0;
                                             img {
                                                 width: 200px;
                                                 height: 6px;

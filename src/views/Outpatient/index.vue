@@ -9,11 +9,11 @@
                             <div slot="header" class="clearfix">
                                 <span>门诊收入总额</span>
                                 <span>总额:</span> 
-                                <count-to :start-val="0" :end-val="total" :duration="2600" :decimals='0' class="card-panel-num"/>
+                                <count-to :start-val="0" :end-val="data.amount" :duration="2600" :decimals='2' class="card-panel-num"/>
                                 <span>元</span>
                             </div>
                             <div class="box-card-conter">
-                                <pie-chart :item="data"/>
+                                <pie-chart :item="data.items" :height='height'/>
                             </div>
                         </el-card>
                     </div>
@@ -23,11 +23,11 @@
                         <div class="box-card-header">
                             <p>各乡镇医院每天收入对比图</p>
                             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
-                                <el-menu-item v-for='(v, i) in data' :key="i"><a href="https://www.ele.me" target="_blank">{{v.name}}</a></el-menu-item>
+                                <el-menu-item v-for='(v, i) in data.items' :key="i"><a href="javascript:;" target="_blank">{{v.name}}</a></el-menu-item>
                             </el-menu>
                         </div>
                         <div class="box-card-conter">
-                            <line-chart/>
+                            <line-chart :item="list"/>
                         </div>
                     </div>
                 </div>
@@ -49,26 +49,63 @@ export default {
     },
     data () {
         return {
-            data:  [
-                { value: 3482, name: '吕合' },
-                { value: 4392, name: '中屯' },
-                { value: 4720, name: '白土' },
-                { value: 5799, name: '回龙' },
-                { value: 4249, name: '斗阁' },
-                { value: 2478, name: '红武' },
-                { value: 4726, name: '干田' }
-            ],
-            total:0,
+            height:"260px",
+            data: {  
+                items:[]
+            } ,
             activeIndex: '1',
+            list: {}
         }
     },
     mounted () {
-        this.total = this.data.map(item => item.value).reduce((a,b) => a + b , 0);
+        //初始化
+        this.getPie();
+        this.getInfo();
     },
     methods: {
-      handleSelect(key, keyPath) {
-        console.log(key, keyPath);
-      }
+        //各村镇的总数据
+        getPie(){
+            let that = this;
+            that.$http
+                .post("/api/TownIncome/MonthlySummary", {
+                    qid: "",
+                    startDate: new Date(),
+                    endDate: ""
+                })
+                .then(res => {
+                    that.data = res;
+                    that.data.items = res.items.map(item => {return {name: item.name,value: item.amount}});
+                })
+                .catch(res => {
+                    this.$notify({
+                        title: "系统提示",
+                        message: res.message,
+                        type: "warning"
+                    });
+                });
+        },
+        getInfo(){
+            let _this = this;
+            _this.$http
+                .post("/api/TownIncome/DailySummary", {
+                    qid: "",
+                    startDate: new Date(),
+                    endDate: ""
+                })
+                .then(res => {
+                    _this.list = res.result;
+                })
+                .catch(res => {
+                    this.$notify({
+                        title: "系统提示",
+                        message: res.message,
+                        type: "warning"
+                    });
+                });
+        },
+        handleSelect(key, keyPath) {
+            console.log(key, keyPath);
+        }
     }
 }
 </script>

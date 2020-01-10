@@ -63,7 +63,19 @@ export default {
           { name: "医院九", amount: 2349 },
           { name: "医院十", amount: 2349 }
         ]
-      }
+      },
+      data: [
+          { name: "医院一", amount: 2349 },
+          { name: "医院二", amount: 3456 },
+          { name: "医院三", amount: 2349 },
+          { name: "医院四", amount: 2349 },
+          { name: "医院五", amount: 2349 },
+          { name: "医院六", amount: 2349 },
+          { name: "医院七", amount: 2349 },
+          { name: "医院八", amount: 2349 },
+          { name: "医院九", amount: 2349 },
+          { name: "医院十", amount: 2349 }
+        ]
     };
   }
 };

@@ -19,22 +19,56 @@ export default {
     data() {
     return {
         chart: null,
-        item:[20,45,32,18,49,69],
-        items:[-23,-53,-63,-19,-70,-30]
+        item:[0,0,0,0,0,0],
+        items:[0,0,0,0,0,0]
     }
     },
     mounted() {
         this.$nextTick(() => {
-            this.initChart()
-
+            this.getSee();
+            this.initChart();
     })
   },
   methods: {
+      //就诊年龄及性别占比
+      getSee(){
+          this.$http
+            .post("/api/RegulatoryReport/GetOutpatientAgeSexRatioInfo",{
+                summaryDate: new Date(),
+                tenantId: 0
+            })
+            .then(res => {
+                let data = res.outpatientAgeSexRatioDetail;
+                for(let i = 0; i< data.length; i++){
+                    let index = 0;
+                    if(data[i].age<=18){
+                        index = 5;
+                    }else if(data[i].age<=30){
+                        index = 4;
+                    }else if(data[i].age<=45) {
+                        index = 3;
+                    }else if(data[i].age<=60) {
+                        index = 2;
+                    }else if(data[i].age<=70) {
+                        index = 1;
+                    }else {
+                        index = 0;
+                    }
+                    if (data[i].sex == 1) {
+                        this.item[index] -= data[i].peopleTotal
+                    }else if(data[i].sex == 2){
+                        this.items[index] += data[i].peopleTotal
+                    }
+                }
+                this.initChart();
+            })
+      },
+
       // 图表初始化数据
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons');
         this.chart.setOption({
-        color: ['#39f','#ff66cc'],
+        color: ['#ff66cc','#39f'],
         tooltip: {
             trigger: 'axis',
             axisPointer: { // 坐标轴指示器，坐标轴触发有效
@@ -63,9 +97,8 @@ export default {
              axisLabel:{
                 formatter: function (data) {
                     return (Math.abs(data));
+                }
             }
-        }
-
         }],
         yAxis: [{
             type: 'category',
@@ -75,16 +108,16 @@ export default {
             data: ["70岁以上","61-70岁","46-60岁","31-45岁","19-30岁","0-18岁"]
         }],
         series: [{
-            name: '男',
+            name: '女',
             type: 'bar',
             stack: '人数',
             barWidth: '50%',
             label: {
-                    show: true,
-                },
-            data: this.item
+                show: true
+            },
+            data: this.items
         },{
-            name: '女',
+            name: '男',
             type: 'bar',
             stack: '人数',
             barWidth: '50%',
@@ -95,8 +128,8 @@ export default {
                         return (Math.abs(value.data));
                     }
                 }
-            },
-            data: this.items
+                },
+            data: this.item
         }]
       })
       }

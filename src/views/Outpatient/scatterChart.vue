@@ -42,7 +42,6 @@ export default {
             this.chart = echarts.init(this.$el, 'macarons');
             let arr = this.items.map(item => item.name);
             let data = this.items.map(item => item.amount);
-            console.log(arr);
             this.chart.setOption({
                 tooltip: {
                     trigger: 'axis'

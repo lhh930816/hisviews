@@ -24,23 +24,31 @@ export default {
   data() {
     return {
       chart: null,
-      date: [],
+      data: [],
       amounts: []
     };
   },
   watch: {
     items(val) {
       this.$nextTick(() => {
-        this.date = val.map(x => x.date);
+        this.data = val.map(x => x.name);
         this.amounts = val.map(x => x.amount);
         this.initChart();
       });
     }
   },
+  mounted () {
+    this.$nextTick(() => {
+      this.data = this.items.map(x => x.name);
+      this.amounts = this.items.map(x => x.amount);
+      this.initChart();
+    });
+  },
   methods: {
     // 图表初始化数据
     initChart() {
       this.chart = echarts.init(this.$el, "macarons");
+      window.console.log(this.items);
       this.chart.setOption({
         color: ["#3ba1ff"],
         tooltip: {
@@ -59,7 +67,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: this.date,
+            data: this.data,
             axisTick: { alignWithLabel: true }
           }
         ],

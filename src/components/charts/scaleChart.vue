@@ -4,20 +4,20 @@
             <div class="card-panel-text">
                 {{item.title}}
             </div>
-            <count-to :start-val="0" :end-val="item.sum" :duration="2600" class="card-panel-num"/>元
+            <count-to :start-val="0" :end-val="item.sum" :duration="2600" :decimals='2' class="card-panel-num"/>元
         </div>
         <div class="card-panel-middle">
             <div class="scale">
-                <span>月同比</span> <i :class="item.scale>1?'el-icon-caret-top':'el-icon-caret-bottom'"></i><count-to :start-val="0" :end-val="item.scale" :duration="2600" class="card-panel-num"/><span>%</span>
+                <span>月同比</span> <i :class="item.scale>1?'el-icon-caret-top':'el-icon-caret-bottom'"></i><count-to :start-val="0" :end-val="item.scale" :duration="2600" :decimals='2' class="card-panel-num"/><span>%</span>
             </div>
             <div class="chain">
-                <span>月环比</span> <i :class="item.chain>1?'el-icon-caret-top':'el-icon-caret-bottom'"></i><count-to :start-val="0" :end-val="item.chain" :duration="2600" class="card-panel-num"/><span>%</span>
+                <span>月环比</span> <i :class="item.chain>1?'el-icon-caret-top':'el-icon-caret-bottom'"></i><count-to :start-val="0" :end-val="item.chain" :duration="2600" :decimals='2' class="card-panel-num"/><span>%</span>
             </div>
            
         </div>
         <div class="card-panel-bottom">
             <el-card  shadow="never">
-                {{item.label}} <span>&yen;</span><span><count-to :start-val="0" :end-val="item.num" :duration="2600" class="card-panel-num"/></span>
+                当日总额 <span>&yen;</span><span><count-to :start-val="0" :end-val="item.num" :duration="2600" :decimals='2' class="card-panel-num"/></span>
             </el-card>
         </div>
     </div>

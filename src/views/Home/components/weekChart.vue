@@ -29,10 +29,23 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-            this.initChart()
+            this.initChart();
+            this.getConfirmed();
     })
   },
   methods: {
+      //慢性病确诊量
+      getConfirmed() {
+          let that = this;
+          that.$http
+            .post("/api/RegulatoryReport/GetOutpatientChronicDiseaseInfo",{
+                summaryDate: new Date(),
+                tenantId: 0
+            })
+            .then(res => {
+                console.log(res);
+            })
+      },
       // 图表初始化数据
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons');
@@ -45,15 +58,12 @@ export default {
         formatter: function (params) {
             
             if(params.length == 1){
-                return params[0].name + '<br/>' + params[0].seriesName + ':' + params[0].value;
+                return params[0].name + '<br/>' + params[0].seriesName + ':' + params[0].value + '<br/>' + '同比:' + proportion + '%';
                 return;
             }
             var proportion = ((params[1].value/params[0].value-1)*100).toFixed(2);
             return params[0].name + '<br/>' + '上周:' + params[0].value +'<br/>'+'本周:'+ params[1].value + '<br/>' + '同比:'+ proportion +'%';
         }
-    },
-    legend: {
-        data: ['上周', '本周'],
     },
     grid: {
         top: '30',
@@ -79,7 +89,7 @@ export default {
     ],
     series: [
         {
-            name: '上周',
+            name: '确诊量',
             type: 'bar',
             label: {
                 show: true,
@@ -87,18 +97,7 @@ export default {
             },
             data: this.weeknum,
             formatter: '{c}'
-
         },
-        {
-            name: '本周',
-            type: 'bar',
-            stack: '总量',
-            label: {
-                show: true
-            },
-            data: this.num,
-            formatter: '{c}'
-        }
     ]
       })
       }

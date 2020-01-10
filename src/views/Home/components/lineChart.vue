@@ -18,16 +18,24 @@ export default {
     data() {
         return {
             chart: null,
-            items:[10, 52, 200, 334, 390, 330, 220],
-            data:["肝硬化","糖尿病","风湿性关节炎","高血压","高血脂","肾功能衰竭","贫血"],
-            list: [45,67,24,79,293,94,493]
+            items:[],
+            cost:[],
+            data:[],
+            list: []
         }
     },
     mounted() {
-        this.$nextTick(() => {
-            this.initChart()
-
-        })
+        this.getdata();
+    },
+    watch: {
+        items(val){
+            this.cost = val.map(item => item.medicationCosts);
+            this.data = val.map(item => item.chronicDiseaseMC);
+            this.list = val.map(item => item.chronicDiseaseQuantity);
+            this.$nextTick(() => {
+                this.initChart();
+            })
+        }
     },
     methods: {
         // 图表初始化数据
@@ -83,7 +91,7 @@ export default {
                     markArea: {
                         silent: true
                     },
-                    data: this.items
+                    data: this.cost
                 },
                 {
                     name: '患病人数',
@@ -101,6 +109,26 @@ export default {
                 }
             ]
         })
+      },
+
+      //慢性累计费用及人数
+      getdata(){
+          let that = this;
+          that.$http
+            .post("/api/RegulatoryReport/GetChronicDiseaseGrandTotalInfo",{
+                summaryDate: new Date(),
+                tenantId: 0
+            })
+            .then(res => {
+                that.items = res.chronicDiseaseGrandTotalDetail;
+            })
+            .catch(res => {
+            this.$notify({
+                title: "系统提示",
+                message: res.message,
+                type: "warning"
+             });
+        });  
       }
   }
 }

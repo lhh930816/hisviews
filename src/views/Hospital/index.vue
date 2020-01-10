@@ -26,8 +26,8 @@
                     @click.native="selectSwiperItem(item)"
                   >
                     <el-card shadow="always">
-                      <div class="swiper-slide-left">
                         <p style="margin-top:0; text-align: left;">{{item.name}}</p>
+                      <div class="swiper-slide-left">
                         <p style="margin:0; text-align: left; font-size: 12px;">总占比</p>
                         <p
                           style="font-size: 24px; text-align: left; margin: 10px 0"
@@ -111,13 +111,14 @@ export default {
   methods: {
     selectSwiperItem(item) {
       let that = this;
+     //各村月报表
       that.$http
         .post("api/VillageIncome/IncomeDetail", {
           TenantId: item.id
         })
         .then(res => {
           that.tenant.name = item.name || "";
-          that.tenant.items = res.items || [];
+          that.tenant.items = res.items.map(item =>{return {name: item.date, amount: item.amount}}) || [];
         })
         .catch(res => {
           this.$notify({
@@ -127,15 +128,15 @@ export default {
           });
         });
     },
+    //各村列表
     getVillageList() {
       let that = this;
       that.$http
         .post("/api/VillageIncome/IncomeSummary", {
-          TenantId: 532300250
+          TenantId: 532301379
         })
         .then(res => {
           that.list = res;
-
           that.selectSwiperItem(that.list.items[0]);
         })
         .catch(res => {

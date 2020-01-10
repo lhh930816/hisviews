@@ -19,22 +19,38 @@ export default {
     data() {
     return {
         chart: null,
-        item:[
-                {name: "感冒灵", value: 20},
-                {name: "阿莫西林", value: 32},
-                {name: "头孢", value: 18},
-                {name: "米松", value: 21},
-                {name: "顺尔宁", value: 12}
-            ]
+        item:[],
+        data:[]
     }
     },
     mounted() {
+     this.getDosage();
+  },
+  watch: {
+      item (){
         this.$nextTick(() => {
-            this.initChart()
-
-    })
+            this.initChart();
+        })
+      }
   },
   methods: {
+      //门诊药品类别占比
+      getDosage (){
+          let that = this;
+          that.$http
+            .post("/api/RegulatoryReport/GetOutpatientDrugCategoryInfo",{
+                summaryDate: new Date(),
+                tenantId: 0
+            })
+            .then(res => {
+                this.item = res.outpatientDrugCategoryDetail.map(item => {return {name: item.sfdlmc,value: (item.drugCategoryRatio*100).toFixed(2)}});
+                if(this.item !=""){
+                    for(let i = this.item.length - 1; i>=0; i--) {
+                        this.data.push("TOP"+(i+1));
+                    }
+                }
+            })
+      },
       // 图表初始化数据
       initChart() {
         this.chart = echarts.init(this.$el, 'macarons');
@@ -66,10 +82,10 @@ export default {
                 axisLine:{ //y轴
                     show:false
                 },
-                data: ["TOP5","TOP4","TOP3","TOP2","TOP1"]
+                data: this.data
             }],
             series: [{
-                name: '用量',
+                name: '类别',
                 type: 'bar',
                 stack: '占比',
                 barWidth: '50%',

@@ -18,7 +18,7 @@ export default {
         },
         height: {
         type: String,
-        default: '220px'
+        default: ''
         },
         item: {
             type: Array,
@@ -32,8 +32,17 @@ export default {
     },
     mounted() {
         this.$nextTick(() => {
-        this.initChart()
+            this.initChart()
         })
+    },
+    watch: {
+        item(val){
+            this.$nextTick(() => {
+                this.item = val;
+                this.initChart();
+            })
+        }
+        
     },
     beforeDestroy() {
         if (!this.chart) {
