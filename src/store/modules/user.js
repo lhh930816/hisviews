@@ -24,7 +24,7 @@ export default {
      */
     setToken(state, token) {
       state.token = token;
-      sessionStorage.setItem("info",token);
+      sessionStorage.setItem("info", token);
     }
   },
   getters: {
