@@ -25,8 +25,8 @@
           </div>
         </div>
         <el-tabs>
-            <el-tab-pane :label="村医院每天收入额">
-                <categoryChart :items="items" />
+            <el-tab-pane label="村医院每天收入额">
+                <categoryChart :items="list.items" />
             </el-tab-pane>
         </el-tabs>
       </div>
@@ -38,6 +38,7 @@ import CountTo from "vue-count-to";
 import breadcrumb from "@/components/breadcrumb";
 import scatterChart from '@/views/Outpatient/scatterChart'
 import categoryChart from '@/views/Hospital/categoryChart'
+import "@/styles/index.scss";
 export default {
   components: {
     CountTo,
@@ -85,6 +86,9 @@ export default {
         .card-panel-num {
           font-size: 24px;
         }
+      }
+      .el-tabs {
+          background: white;
       }
     }
   }

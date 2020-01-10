@@ -1,10 +1,6 @@
 require('es6-promise').polyfill() // 引入一次就行
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig
-} from "axios";
-
-window.console.log(process.env);
+import axios from "axios";
+import store from "@/store";
 
 var basrUrl = "";
 switch (process.env.NODE_ENV) {
@@ -40,16 +36,24 @@ service.interceptors.request.use(
  */
 service.interceptors.response.use(
   response => {
-    if (response.data.success) {
-      return Promise.resolve(response.data.result);
+    if (response.data.success || response.data.Success) {
+      return Promise.resolve(response.data.result || response.data.Result);
     } else {
-      return Promise.reject(response.data.error);
+      var data = {
+        code: 500,
+        message: (response.data.error && response.data.error.message) || (response.data.Error && response.data.Error.Message),
+        data: response.data.error || response.data.Error
+      };
+      return Promise.reject(data);
     }
   },
   error => {
-    error.data = {};
-    error.message = "服务器异常，请联系管理员！";
-    return Promise.reject(error);
+    var data = {
+      code: 500,
+      message: "系统请求失败，请稍后重试",
+      data: error
+    };
+    return Promise.reject(data);
   }
 );
 

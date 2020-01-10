@@ -71,8 +71,7 @@ export default {
                         type: 'scatter',
                         data: data,
                          symbolSize: function (data) {
-                             console.log(data);
-                            return Math.sqrt(data);
+                            return Math.sqrt(data)/2;
                         },
                     }
                 ]
@@ -81,6 +80,3 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-
-</style>

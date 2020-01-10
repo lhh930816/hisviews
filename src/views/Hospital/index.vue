@@ -20,7 +20,11 @@
               </div>
               <div class="box-card-conter">
                 <swiper :options="swiperOption">
-                  <swiper-slide v-for="item in list.items" :key="item.name" @click.native="selectSwiperItem(item)">
+                  <swiper-slide
+                    v-for="item in list.items"
+                    :key="item.name"
+                    @click.native="selectSwiperItem(item)"
+                  >
                     <el-card shadow="always">
                       <div class="swiper-slide-left">
                         <p style="margin-top:0; text-align: left;">{{item.name}}</p>
@@ -108,24 +112,38 @@ export default {
     selectSwiperItem(item) {
       let that = this;
       that.$http
-        .post("api/VillageIncome/IncomeDetail/IncomeDetail", {
+        .post("api/VillageIncome/IncomeDetail", {
           TenantId: item.id
         })
         .then(res => {
           that.tenant.name = item.name || "";
           that.tenant.items = res.items || [];
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
         });
     },
     getVillageList() {
       let that = this;
       that.$http
-        .post("/api/VillageIncome/IncomeSummary/IncomeSummary", {
+        .post("/api/VillageIncome/IncomeSummary", {
           TenantId: 532300250
         })
         .then(res => {
           that.list = res;
 
           that.selectSwiperItem(that.list.items[0]);
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
         });
     }
   }
