@@ -67,7 +67,7 @@ export default {
           z: 2,
           //  zlevel:10,
           style: {
-            text: this.data.title + +"\r\n\r\n" + total + this.data.unit,
+            text: this.data.title +"\r\n\r\n" + total + this.data.unit,
             textAlign: "center",
             fill: "#000"
           }

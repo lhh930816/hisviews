@@ -59,6 +59,9 @@ export default {
         tooltip: {
           trigger: "axis"
         },
+         legend: {
+          data: newData.map(item =>item.name)
+        },
         grid: {
           left: "3%",
           right: "4%",

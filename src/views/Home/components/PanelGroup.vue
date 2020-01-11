@@ -35,8 +35,12 @@ export default {
   mounted() {
     this.getOutpatient();
     this.getDrug();
+    this.$nextTick(()=>{
+      this.getCharge();
+      
+    })
     this.getRegistration();
-    this.getCharge();
+    
   },
   methods: {
     //门诊收入汇总

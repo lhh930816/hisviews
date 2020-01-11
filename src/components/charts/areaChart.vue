@@ -1,5 +1,5 @@
 <template>
-    <div class="card-panel">
+    <div class="card-panel" @click="gotolink">
         <div class="card-panel-description">
             <div class="card-panel-text">
                {{item.title}}
@@ -30,6 +30,17 @@ export default {
     },
     data () {
         return {
+        }
+    },
+    methods: {
+         gotolink() {
+            this.$router.push({
+                path: '/people',
+                name: "people",
+                query: {
+                    type: this.item.title =="挂号人数"?1:2
+                }
+            });
         }
     }
 }

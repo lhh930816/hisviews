@@ -39,10 +39,10 @@
                           style="display: inline-block; width: 80px; text-align: right; margin-right: 20px;"
                         >{{item.diseaseRatio.toFixed(2)}}%</span>
                         <span
-                          :class="item.diseaseMOY > 1 ? 'box-card-compare':'box-card-compare-span'"
+                          :class="item.diseaseMOY > 0 ? 'box-card-compare':item.diseaseMOY<0?'box-card-compare-span':''"
                         >
                           {{item.diseaseMOY}}%
-                          <i :class="item.diseaseMOY > 1 ? 'el-icon-top':'el-icon-bottom'"></i>
+                          <i :class="item.diseaseMOY > 0 ? 'el-icon-top':item.diseaseMOY<0?'el-icon-bottom':''"></i>
                         </span>
                         <span>同比</span>
                       </div>
@@ -111,7 +111,7 @@
                 <div class="box-card-conter">
                   <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane :label="item.name" :name="'tab'+(index+1)"  v-for="(item,index) in data" :key="item.name">
-                      <pie-chart :item="item.data" :height="height"/>
+                      <pie-chart :item="item.data" :height="height" :width="width"/>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -145,6 +145,7 @@ export default {
       items: [],
       activeName: "tab1",
       height: "240px",
+      width: "342px",
       data: []
     };
   },

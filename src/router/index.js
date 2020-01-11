@@ -61,16 +61,15 @@ export default new Router({
         ],
       },
       {
-        path: 'town',
-        name: 'town',
+        path: 'people',
+        name: 'people',
         component: resolve => require(['@/views/town/people.vue'], resolve),
         meta: [{
             name: '首页',
             url: '/index'
           },
           {
-            name: '乡镇医院人数',
-            url: '/Outpatient'
+            name: '乡镇医院人数'
           }
         ]
       }
