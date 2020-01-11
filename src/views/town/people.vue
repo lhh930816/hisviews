@@ -87,7 +87,10 @@ export default {
       let that = this;
       
       that.$http
-        .post("/api/TownPatientNum/MonthlySummary", { type: this.msg })
+        .post("/api/TownPatientNum/MonthlySummary", { 
+          startDate: this.$store.getters.date,
+          type: this.msg 
+        })
         .then(res => {
           that.summary.title = res.name;
           that.summary.total = res.amount;
@@ -111,7 +114,10 @@ export default {
     getDetail() {
       let that = this;
       that.$http
-        .post("/api/TownPatientNum/DailySummary", { type: this.msg })
+        .post("/api/TownPatientNum/DailySummary", {
+          type: this.msg,
+          startDate: this.$store.getters.date,
+        })
         .then(res => {
           that.detail.date = res.result.date;
           that.detail.items = res.result.items.map(x => {

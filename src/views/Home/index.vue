@@ -1,6 +1,21 @@
 <template>
   <div class="page-content-wrapper">
     <div class="page-content">
+      <el-row>
+        <el-col
+          :xs="{span: 24}"
+          :sm="{span: 24}"
+          :md="{span: 24}"
+          :lg="{span: 24}"
+          :xl="{span: 24}"
+        >
+          <div class="block" style="float:right;margin-bottom: 15px; margin-right: 25px;">
+            <span class="demonstration">日期:</span>
+            <el-date-picker v-model="date" type="month" placeholder="选择月"></el-date-picker>
+          </div>
+        </el-col>
+      </el-row>
+
       <panel-group />
       <el-row :gutter="8" class="page-center">
         <el-col
@@ -42,7 +57,9 @@
                           :class="item.diseaseMOY > 0 ? 'box-card-compare':item.diseaseMOY<0?'box-card-compare-span':''"
                         >
                           {{item.diseaseMOY}}%
-                          <i :class="item.diseaseMOY > 0 ? 'el-icon-top':item.diseaseMOY<0?'el-icon-bottom':''"></i>
+                          <i
+                            :class="item.diseaseMOY > 0 ? 'el-icon-top':item.diseaseMOY<0?'el-icon-bottom':''"
+                          ></i>
                         </span>
                         <span>同比</span>
                       </div>
@@ -110,8 +127,13 @@
                 </div>
                 <div class="box-card-conter">
                   <el-tabs v-model="activeName" @tab-click="handleClick">
-                    <el-tab-pane :label="item.name" :name="'tab'+(index+1)"  v-for="(item,index) in data" :key="item.name">
-                      <pie-chart :item="item.data" :height="height" :width="width"/>
+                    <el-tab-pane
+                      :label="item.name"
+                      :name="'tab'+(index+1)"
+                      v-for="(item,index) in data"
+                      :key="item.name"
+                    >
+                      <pie-chart :item="item.data" :height="height" :width="width" />
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -125,12 +147,13 @@
 </template>
 <script>
 import CountTo from "vue-count-to";
-import PanelGroup from "./components/PanelGroup";
-import weekChart from "./components/weekChart";
-import barChart from "./components/barChart";
-import dosageChart from "./components/dosageChart";
-import pieChart from "./components/pieChart";
-import lineChart from "./components/lineChart";
+import PanelGroup from "@/views/Home/components/PanelGroup";
+import weekChart from "@/views/Home/components/weekChart";
+import barChart from "@/views/Home/components/barChart";
+import dosageChart from "@/views/Home/components/dosageChart";
+import pieChart from "@/views/Home/components/pieChart";
+import lineChart from "@/views/Home/components/lineChart";
+import { formatDate } from "@/util/moment.js";
 export default {
   components: {
     PanelGroup,
@@ -146,19 +169,33 @@ export default {
       activeName: "tab1",
       height: "240px",
       width: "342px",
-      data: []
+      data: [],
+      date: this.$store.getters.date
     };
   },
   mounted() {
     this.getIllness();
     this.getHospitalIncome();
   },
+  watch: {
+    date(val) {
+      this.date = formatDate(new Date(val), "yyyy-MM");
+      sessionStorage.setItem("date", this.date);
+      
+     this.getFun();
+      console.log("日期:" +  this.$store.getters.date);
+    }
+  },
   methods: {
+    getFun() {
+      this.getIllness();
+      this.getHospitalIncome();
+    },
     //疾病
     getIllness() {
       this.$http
         .post("/api/RegulatoryReport/GetOutpatientDiseaseInfo", {
-          summaryDate: new Date(),
+          summaryDate: this.date,
           tenantId: 0
         })
         .then(res => {
@@ -174,19 +211,27 @@ export default {
     },
     //各医院收入占比
     getHospitalIncome() {
-      this.$http.post("/api/RegulatoryReport/GetHospitalIncomeRatioInfo", {
-        summaryDate: new Date(),
-        tenantId: 0
-      })
-      .then(res => {
-        this.data = res.hospitalIncomeSummaryDetail.map(item => {return{name:item.tenantName,data:item.hospitalIncomeRatioDetail}});
-        if(this.data.length != ""){
-            for(let i = 0; i<this.data.length; i++) {
-                this.data[i].data = this.data[i].data.map(item => {return{name: item.tenantName,value: item.monthlyTotal}})
+      this.$http
+        .post("/api/RegulatoryReport/GetHospitalIncomeRatioInfo", {
+          summaryDate: this.date,
+          tenantId: 0
+        })
+        .then(res => {
+          this.data = res.hospitalIncomeSummaryDetail.map(item => {
+            return {
+              name: item.tenantName,
+              data: item.hospitalIncomeRatioDetail
+            };
+          });
+          if (this.data.length != "") {
+            for (let i = 0; i < this.data.length; i++) {
+              this.data[i].data = this.data[i].data.map(item => {
+                return { name: item.tenantName, value: item.monthlyTotal };
+              });
             }
-        }          
-      })
-      .catch(res => {
+          }
+        })
+        .catch(res => {
           this.$notify({
             title: "系统提示",
             message: res.message,
@@ -194,6 +239,7 @@ export default {
           });
         });
     },
+
     handleClick(tab, event) {
       console.log(tab, event);
     }

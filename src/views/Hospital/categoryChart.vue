@@ -34,7 +34,7 @@ export default {
         let data = (val.map(x => x.items));
         for(let i = 0;i < data.length; i++){
          this.data = data[i].map(item => item.name);
-         this.amounts = data[i].map(x => x.amounts);
+         this.amounts = data[i].map(x => x.amount);
         }
         this.initChart();
       });

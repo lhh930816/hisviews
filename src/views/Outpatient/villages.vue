@@ -65,7 +65,7 @@ export default {
     getData() {
       this.$http
         .post("/api/VillageIncome/IncomeSummary", {
-          tenantId: this.$route.params.id || 0
+          tenantId: this.$route.query.id || 0
         })
         .then(res => {
           this.list = res;
@@ -82,8 +82,8 @@ export default {
     getDay(){
       this.$http
         .post("/api/TownIncome/DailyDetail", {
-          tenantid: this.$route.params.id || 0,
-          startDate: new Date(),
+          tenantid: this.$route.query.id || 0,
+           startDate: this.$store.getters.date,
            endDate: ""
         })
         .then(res => {

@@ -45,8 +45,7 @@ export default {
     initChart() {
       this.chart = echarts.init(this.$el, "macarons");
       let newData = [];
-      if (this.items.length > 1) {
-        for (let i = 0; i < this.items.length; i++) {
+        for (let i = 0; i < (this.items ||[]).length; i++) {
           let item = {
             name: this.items[i].name,
             type: "line",
@@ -54,7 +53,6 @@ export default {
           };
           newData.push(item);
         }
-      }
       this.chart.setOption({
         tooltip: {
           trigger: "axis"

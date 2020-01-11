@@ -33,7 +33,7 @@ export default {
     getSee() {
       this.$http
         .post("/api/RegulatoryReport/GetOutpatientAgeSexRatioInfo", {
-          summaryDate: new Date(),
+          summaryDate: this.$store.getters.date,
           tenantId: 0
         })
         .then(res => {

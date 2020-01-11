@@ -38,7 +38,7 @@ export default {
       let that = this;
       that.$http
         .post("/api/RegulatoryReport/GetOutpatientChronicDiseaseInfo", {
-          summaryDate: new Date(),
+          summaryDate: this.$store.getters.date,
           tenantId: 0
         })
         .then(res => {

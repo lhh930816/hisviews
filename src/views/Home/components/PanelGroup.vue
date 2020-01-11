@@ -29,7 +29,7 @@ export default {
     return {
       info: [],
       items: [],
-      date: this.$moment(new Date()).format("YYYY-MM-DD"),
+      date: this.$store.getters.date
     };
   },
   mounted() {
@@ -37,10 +37,8 @@ export default {
     this.getDrug();
     this.$nextTick(()=>{
       this.getCharge();
-      
     })
     this.getRegistration();
-    
   },
   methods: {
     //门诊收入汇总

@@ -1,3 +1,4 @@
+import {formatDate} from '@/util/moment.js'
 const getters = {
     sidebar: state => state.app.sidebar,
     size: state => state.app.size,

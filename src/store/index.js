@@ -21,6 +21,7 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 
 const store = new Vuex.Store({
   actions,
+  state:{date:""},
   mutations,
   modules,
   getters,
