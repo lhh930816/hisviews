@@ -1,6 +1,6 @@
 <template>
   <div class="page-content-wrapper">
-    <breadcrumb/>
+    <breadcrumb />
     <div class="page-content">
       <div class="page-main">
         <div class="card-panel">
@@ -19,19 +19,15 @@
                 <span>元</span>
               </div>
               <div class="box-card-conter">
-                <swiper :options="swiperOption">
-                  <swiper-slide
-                    v-for="item in list.items"
-                    :key="item.name"
-                    @click.native="selectSwiperItem(item)"
-                  >
+                <swiper :options="swiperOption" ref="tenantSwiper">
+                  <swiper-slide v-for="(item, index) in list.items" :key="item.name" :class="{'active': index === activeSwiper }">
                     <el-card shadow="always">
-                        <p style="margin-top:0; text-align: left;">{{item.name}}</p>
+                      <p style="margin-top:0; text-align: left;">{{item.name}}</p>
                       <div class="swiper-slide-left">
                         <p style="margin:0; text-align: left; font-size: 12px;">总占比</p>
                         <p
                           style="font-size: 24px; text-align: left; margin: 10px 0"
-                        >{{((item.amount*0.1/list.amount)*100).toFixed(2)}}%</p>
+                        >{{(list.amount !=0 ? item.amount*0.1/list.amount*100 : 0).toFixed(2)}}%</p>
                       </div>
                       <div class="swiper-slide-right">
                         <div class="swiper-slide-num">
@@ -75,7 +71,7 @@
 import CountTo from "vue-count-to";
 import Swiper from "swiper";
 import categoryChart from "./categoryChart";
-import breadcrumb from '../../components/breadcrumb'
+import breadcrumb from "../../components/breadcrumb";
 import "@/styles/index.scss";
 export default {
   components: {
@@ -85,6 +81,7 @@ export default {
   },
   data() {
     return {
+      activeSwiper: 0,
       swiperOption: {
         slidesPerView: 5,
         spaceBetween: 30,
@@ -92,6 +89,15 @@ export default {
         navigation: {
           nextEl: ".swiper-button-next",
           prevEl: ".swiper-button-prev"
+        },
+        on: {
+          click: () => {
+            var index = this.$refs.tenantSwiper.swiper.clickedIndex;
+            if (index >= 0) {
+              this.activeSwiper = index;
+              this.selectSwiperItem(this.list.items[index]);
+            }
+          }
         }
       },
       list: {
@@ -111,20 +117,24 @@ export default {
   methods: {
     selectSwiperItem(item) {
       let that = this;
-     //各村月报表
+      //各村月报表
       that.$http
         .post("api/VillageIncome/IncomeDetail", {
           TenantId: item.id
         })
         .then(res => {
           that.tenant.name = item.name || "";
-          that.tenant.items = res.items.map(item =>{return {name: item.date, amount: item.amount}}) || [];
+          that.tenant.items =
+            res.items.map(item => {
+              return { name: item.date, amount: item.amount };
+            }) || [];
         })
         .catch(res => {
           this.$notify({
             title: "系统提示",
             message: res.message,
-            type: "warning"
+            type: "warning",
+            position: "bottom-right"
           });
         });
     },
@@ -133,7 +143,7 @@ export default {
       let that = this;
       that.$http
         .post("/api/VillageIncome/IncomeSummary", {
-          TenantId: 532301379
+          TenantId: 532300250
         })
         .then(res => {
           that.list = res;
@@ -143,7 +153,8 @@ export default {
           this.$notify({
             title: "系统提示",
             message: res.message,
-            type: "warning"
+            type: "warning",
+            position: "bottom-right"
           });
         });
     }
@@ -166,18 +177,21 @@ export default {
         font-size: 18px;
         padding-left: 20px;
         .card-panel-num {
-            font-size: 24px;
+          font-size: 24px;
         }
       }
       .swiper-container {
         .swiper-wrapper {
-          .swiper-slide {
-            .el-card:hover {
-              background: #f2f2f2;
-              cursor: pointer;
+            .swiper-slide.active .el-card,
+            .swiper-slide .el-card:hover {
+              background-color: #f2f2f2 !important;
               .el-progress {
                 opacity: 1 !important;
               }
+            }
+          .swiper-slide {
+            .el-card:hover {
+              cursor: pointer;
             }
             .el-card {
               .box-card-conter {
