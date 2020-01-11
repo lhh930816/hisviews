@@ -23,7 +23,7 @@
                         <div class="box-card-header">
                             <p>各乡镇医院每天收入对比图</p>
                             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
-                                <el-menu-item v-for='(v, i) in data.items' :key="i"><a href="javascript:;" target="_blank">{{v.name}}</a></el-menu-item>
+                                <el-menu-item v-for='(v, i) in data.items' :key="i"><a @click="downPage(v.id)" target="_blank">{{v.name}}</a></el-menu-item>
                             </el-menu>
                         </div>
                         <div class="box-card-conter">
@@ -61,6 +61,7 @@ export default {
         //初始化
         this.getPie();
         this.getInfo();
+        console.log(this.$route.params.name)
     },
     methods: {
         //各村镇的总数据
@@ -74,7 +75,7 @@ export default {
                 })
                 .then(res => {
                     that.data = res;
-                    that.data.items = res.items.map(item => {return {name: item.name,value: item.amount}});
+                    that.data.items = res.items.map(item => {return {name: item.name,value: item.amount, id:item.tenantid}});
                 })
                 .catch(res => {
                     this.$notify({
@@ -102,6 +103,18 @@ export default {
                         type: "warning"
                     });
                 });
+        },
+        downPage(id){
+            this.$router.push(
+                {
+                    path:'/villages',
+                    name:'villages',
+                    params: {
+                        id:id
+                    }
+                }
+
+            )
         },
         handleSelect(key, keyPath) {
             console.log(key, keyPath);

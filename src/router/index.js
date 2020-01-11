@@ -18,14 +18,6 @@ export default new Router({
           meta:[
             {name: '首页'}
           ]
-        },{
-          path:'Hospital',
-          name: 'Hospital',
-          component: resolve => require(['@/views/Hospital/index.vue'],resolve),
-          meta:[
-            {name: '首页', url: '/index'},
-            {name: '医院收入额'}
-          ]
         },
         {
           path:'Outpatient',

@@ -48,7 +48,7 @@ export default {
         })
         .then(res => {
           let obj = {};
-          obj.title = "药品收入总额";
+          obj.title = "门收入总额";
           obj.sum = res.monthlyTotal;
           obj.scale = res.moy*100;
           obj.num = res.dailyTotal;
@@ -73,7 +73,7 @@ export default {
         })
         .then(res => {
           let objs = {};
-          objs.title = "门诊收入总额";
+          objs.title = "药品收入总额";
           objs.sum = res.monthlyTotal;
           objs.scale = res.moy*100;
           objs.num = res.dailyTotal;

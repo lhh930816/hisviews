@@ -1,5 +1,5 @@
 <template>
-    <div class="card-panel">
+    <div class="card-panel" @click="gotolink" ref="msg">
         <div class="card-panel-description">
             <div class="card-panel-text">
                 {{item.title}}
@@ -37,6 +37,17 @@ export default {
     data () {
         return {
 
+        }
+    },
+    methods:{
+        gotolink() {
+            this.$router.push({
+                path:'/Outpatient',
+                name:'Outpatient',
+                params: {   
+                    name: this.item.title  
+                }
+            });
         }
     }   
 }

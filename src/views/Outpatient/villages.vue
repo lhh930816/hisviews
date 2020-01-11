@@ -19,15 +19,15 @@
                 <span>元</span>
               </div>
               <div class="box-card-conter">
-                 <scatter-chart/>
+                <scatter-chart :items="list.items" />
               </div>
             </el-card>
           </div>
         </div>
         <el-tabs>
-            <el-tab-pane label="村医院每天收入额">
-                <categoryChart :items="list.items" />
-            </el-tab-pane>
+          <el-tab-pane label="村医院每天收入额">
+            <categoryChart :items="data" />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
@@ -36,8 +36,8 @@
 <script>
 import CountTo from "vue-count-to";
 import breadcrumb from "@/components/breadcrumb";
-import scatterChart from '@/views/Outpatient/scatterChart'
-import categoryChart from '@/views/Hospital/categoryChart'
+import scatterChart from "@/views/Outpatient/scatterChart";
+import categoryChart from "@/views/Hospital/categoryChart";
 import "@/styles/index.scss";
 export default {
   components: {
@@ -49,34 +49,54 @@ export default {
   data() {
     return {
       list: {
-        name: "东华镇",
-        amount: 12341.5646,
-        items: [
-          { name: "医院一", amount: 2349 },
-          { name: "医院二", amount: 3456 },
-          { name: "医院三", amount: 2349 },
-          { name: "医院四", amount: 2349 },
-          { name: "医院五", amount: 2349 },
-          { name: "医院六", amount: 2349 },
-          { name: "医院七", amount: 2349 },
-          { name: "医院八", amount: 2349 },
-          { name: "医院九", amount: 2349 },
-          { name: "医院十", amount: 2349 }
-        ]
+        name: "",
+        amount: 0,
+        items: []
       },
-      data: [
-          { name: "医院一", amount: 2349 },
-          { name: "医院二", amount: 3456 },
-          { name: "医院三", amount: 2349 },
-          { name: "医院四", amount: 2349 },
-          { name: "医院五", amount: 2349 },
-          { name: "医院六", amount: 2349 },
-          { name: "医院七", amount: 2349 },
-          { name: "医院八", amount: 2349 },
-          { name: "医院九", amount: 2349 },
-          { name: "医院十", amount: 2349 }
-        ]
+      data: [],
     };
+  },
+  mounted() {
+   this.getData();
+   this.getDay();
+  },
+  methods: {
+    //各村医院月入额
+    getData() {
+      this.$http
+        .post("/api/VillageIncome/IncomeSummary", {
+          tenantId: this.$route.params.id || 0
+        })
+        .then(res => {
+          this.list = res;
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
+        });
+    },
+    //村医院每天收入额
+    getDay(){
+      this.$http
+        .post("/api/TownIncome/DailyDetail", {
+          tenantid: this.$route.params.id || 0,
+          startDate: new Date(),
+           endDate: ""
+        })
+        .then(res => {
+          this.data = res.result.items;
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
+        });
+    }
   }
 };
 </script>
@@ -100,7 +120,7 @@ export default {
         }
       }
       .el-tabs {
-          background: white;
+        background: white;
       }
     }
   }

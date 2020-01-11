@@ -13,28 +13,18 @@ export default {
         Height: {
             type: String,
             default: '260px'
+        },
+        items: {
+            type: Array,
+            default: []
         }
     },
-    data () {
-        return {
-            items: [
-                { name: "医院一", amount: 2423 },
-                { name: "医院二", amount: 3456 },
-                { name: "医院三", amount: 5354 },
-                { name: "医院四", amount: 6456 },
-                { name: "医院五", amount: 7567 },
-                { name: "医院六", amount: 6453 },
-                { name: "医院七", amount: 5353 },
-                { name: "医院八", amount: 2423 },
-                { name: "医院九", amount: 7577 },
-                { name: "医院十", amount: 8897 }
-            ]
+    watch: {
+        items() {
+            this.$nextTick(() => {
+                this.initChart();
+            })
         }
-    },
-    mounted () {
-        this.$nextTick(() => {
-            this.initChart();
-        })
     },
     methods: {
         //图表初始化数据
@@ -70,7 +60,7 @@ export default {
                         type: 'scatter',
                         data: data,
                          symbolSize: function (data) {
-                            return Math.sqrt(data)/2;
+                            return Math.sqrt(data)/6;
                         },
                     }
                 ]

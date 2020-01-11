@@ -12,7 +12,7 @@ export default {
         },
         Height: {
             type: String,
-            default: '546px'
+            default: '542px'
         }
     },
     data() {
