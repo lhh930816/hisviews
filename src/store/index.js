@@ -20,9 +20,30 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
 }, {})
 
 const store = new Vuex.Store({
-  actions,
-  state:{date:""},
-  mutations,
+  state: {
+    date: ""
+  },
+  actions: {
+    /**
+     * 设置日期 
+     * @param {any} state 
+     * @param {string} date 
+     */
+    setDate(context, date) {
+      context.commit('setDate', date);
+    }
+  },
+  mutations: {
+    /**
+     * 设置日期 
+     * @param {any} state 
+     * @param {string} date 
+     */
+    setDate(state, date) {
+      state.date = date;
+      sessionStorage.setItem("date", date);
+    }
+  },
   modules,
   getters,
   plugins: [persistedState({

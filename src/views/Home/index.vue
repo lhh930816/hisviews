@@ -170,7 +170,8 @@ export default {
       height: "240px",
       width: "342px",
       data: [],
-      date: this.$store.getters.date
+      date: this.$store.getters.date,
+      newDate:""
     };
   },
   mounted() {
@@ -179,20 +180,24 @@ export default {
   },
   watch: {
     date(val) {
-      this.date = formatDate(new Date(val), "yyyy-MM");
-      sessionStorage.setItem("date", this.date);
-      
-     this.getFun();
-      console.log("日期:" +  this.$store.getters.date);
+      let date= formatDate(new Date(val), "yyyy-MM");
+      this.newDate = date;
+      this.date = date;
+      this.$store.commit("setDate", date);
+    //  this.getFun();
+    this.$nextTick(()=>{
+      this.getIllness();
+      this.getHospitalIncome();
+    })
+   
     }
   },
   methods: {
     getFun() {
-      this.getIllness();
-      this.getHospitalIncome();
     },
     //疾病
     getIllness() {
+       console.log("日期:" +  this.date);
       this.$http
         .post("/api/RegulatoryReport/GetOutpatientDiseaseInfo", {
           summaryDate: this.date,
