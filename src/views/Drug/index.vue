@@ -7,7 +7,7 @@
                     <div class="card-panel-description">
                         <el-card class="box-card">
                             <div slot="header" class="clearfix">
-                                <span>门诊收入总额</span>
+                                <span>药品收入总额</span>
                                 <span>总额:</span> 
                                 <count-to :start-val="0" :end-val="data.amount" :duration="2600" :decimals='2' class="card-panel-num"/>
                                 <span>元</span>
@@ -21,10 +21,7 @@
                 <div class="card-panel">
                     <div class="card-panel-description">
                         <div class="box-card-header">
-                            <p>各乡镇门诊每天收入对比图</p>
-                            <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
-                                <el-menu-item v-for='(v, i) in data.items' :key="i"><a @click="downPage(v.id)" target="_blank">{{v.name}}</a></el-menu-item>
-                            </el-menu>
+                            <p>各乡镇药品每天收入对比图</p>
                         </div>
                         <div class="box-card-conter">
                             <line-chart :item="list"/>
@@ -37,9 +34,9 @@
 </template>
 <script>
 import CountTo from 'vue-count-to'
-import breadcrumb from '../../components/breadcrumb'
-import pieChart from '../Home/components/pieChart'
-import lineChart from './lineChart'
+import breadcrumb from '@/components/breadcrumb'
+import pieChart from '@/views/Home/components/pieChart'
+import lineChart from '@/views/Outpatient/lineChart'
 export default {
     components: {
         CountTo,
@@ -67,14 +64,14 @@ export default {
         getPie(){
             let that = this;
             that.$http
-                .post("/api/TownIncome/MonthlySummary", {
+                .post("/api/DrugIncome/MonthlyDrugSummary", {
                     qid: "",
                     startDate: new Date(),
                     endDate: ""
                 })
                 .then(res => {
                     that.data = res;
-                    that.data.items = res.items.map(item => {return {name: item.name,value: item.amount, id:item.tenantid}});
+                    that.data.items = res.items.map(item => {return {name: item.name,value: item.amount}});
                 })
                 .catch(res => {
                     this.$notify({
@@ -87,12 +84,13 @@ export default {
         getInfo(){
             let _this = this;
             _this.$http
-                .post("/api/TownIncome/DailySummary", {
+                .post("/api/DrugIncome/DailyDrugSummary", {
                     qid: "",
                     startDate: new Date(),
                     endDate: ""
                 })
                 .then(res => {
+                    console.log(res);
                     _this.list = res.result;
                 })
                 .catch(res => {

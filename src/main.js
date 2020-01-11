@@ -11,13 +11,15 @@ import echarts from 'echarts'
 import vueSwiper from 'vue-awesome-swiper'
 import VCharts from 'v-charts'
 import 'swiper/css/swiper.css'
-
+import moment from 'moment'
 import axios from '@/kits/http'
 
+moment.locale('zh-cn')
 
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
 Vue.prototype.$http = axios
+Vue.prototype.$moment = moment
 Vue.use(VCharts)
 Vue.use(Vuex)
 Vue.use(vueSwiper)

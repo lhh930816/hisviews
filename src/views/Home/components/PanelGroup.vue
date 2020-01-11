@@ -28,7 +28,8 @@ export default {
   data() {
     return {
       info: [],
-      items: []
+      items: [],
+      date: this.$moment(new Date()).format("YYYY-MM-DD"),
     };
   },
   mounted() {
@@ -44,7 +45,7 @@ export default {
       that.$http
         .post("/api/RegulatoryReport/GetOutpatientIncomeInfo", {
           tenantId: 0,
-          summaryDate: new Date()
+          summaryDate: this.date
         })
         .then(res => {
           let obj = {};
@@ -69,7 +70,7 @@ export default {
       _this.$http
         .post("/api/RegulatoryReport/GetDrugIncomeInfo", {
           tenantId: 0,
-          summaryDate: new Date()
+          summaryDate: this.date
         })
         .then(res => {
           let objs = {};
@@ -93,7 +94,7 @@ export default {
       this.$http
         .post("/api/RegulatoryReport/GetRegisteredNumberInfo", {
           tenantId: 0,
-          summaryDate: new Date()
+          summaryDate: this.date
         })
         .then(res => {
           let reg = {};
@@ -120,7 +121,7 @@ export default {
         this.$http
         .post("/api/RegulatoryReport/GetChargePeopleNumberInfo", {
           tenantId: 0,
-          summaryDate: new Date()
+          summaryDate: this.date
         })
         .then(res => {
           let reg = {};

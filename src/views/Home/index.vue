@@ -282,12 +282,12 @@ export default {
                   float: left;
                 }
                 .box-card-right {
-                  float: left;
+                  float: right;
                   font-size: 14px;
                   .box-card-text {
                     padding: 12px 0;
                     img {
-                      width: 200px;
+                      width: 180px;
                       height: 6px;
                     }
                     .box-card-compare {
