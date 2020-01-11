@@ -26,7 +26,20 @@ export default new Router({
             url: '/index'
           },
           {
-            name: '乡镇医院收入额'
+            name: '乡镇门诊收入额'
+          }
+        ]
+      },
+      {
+        path: 'Drug',
+        name: 'Drug',
+        component: resolve => require(['@/views/Drug/index.vue'], resolve),
+        meta: [{
+            name: '首页',
+            url: '/index'
+          },
+          {
+            name: '药品收入额'
           }
         ]
       },
@@ -39,14 +52,15 @@ export default new Router({
             url: '/index'
           },
           {
-            name: '乡镇医院收入额',
+            name: '乡镇门诊收入额',
             url: '/Outpatient'
           },
           {
-            name: '各村医院收入额'
+            name: '各村门诊收入额'
           }
         ],
-      }, {
+      },
+      {
         path: 'town',
         name: 'town',
         component: resolve => require(['@/views/town/people.vue'], resolve),

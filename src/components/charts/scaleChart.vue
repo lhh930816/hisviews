@@ -1,5 +1,5 @@
 <template>
-    <div class="card-panel" @click="gotolink" ref="msg">
+    <div class="card-panel" @click="gotolink">
         <div class="card-panel-description">
             <div class="card-panel-text">
                 {{item.title}}
@@ -8,10 +8,10 @@
         </div>
         <div class="card-panel-middle">
             <div class="scale">
-                <span>月同比</span> <i :class="item.scale>1?'el-icon-caret-top':'el-icon-caret-bottom'"></i><count-to :start-val="0" :end-val="item.scale" :duration="2600" :decimals='2' class="card-panel-num"/><span>%</span>
+                <span>月同比</span> <i :class="item.scale>0?'el-icon-caret-top':item.scale<0?'el-icon-caret-bottom':''"></i><count-to :start-val="0" :end-val="item.scale" :duration="2600" :decimals='2' class="card-panel-num"/><span>%</span>
             </div>
             <div class="chain">
-                <span>月环比</span> <i :class="item.chain>1?'el-icon-caret-top':'el-icon-caret-bottom'"></i><count-to :start-val="0" :end-val="item.chain" :duration="2600" :decimals='2' class="card-panel-num"/><span>%</span>
+                <span>月环比</span> <i :class="item.chain>0?'el-icon-caret-top':item.chain <0 ?'el-icon-caret-bottom':''"></i><count-to :start-val="0" :end-val="item.chain" :duration="2600" :decimals='2' class="card-panel-num"/><span>%</span>
             </div>
            
         </div>
@@ -41,12 +41,13 @@ export default {
     },
     methods:{
         gotolink() {
+            if(this.item.title =="门诊收入总额") {
+                var path = '/Outpatient';
+            }else {
+                var path = '/Drug';
+            }
             this.$router.push({
-                path:'/Outpatient',
-                name:'Outpatient',
-                params: {   
-                    name: this.item.title  
-                }
+                path: path
             });
         }
     }   
@@ -55,15 +56,15 @@ export default {
 <style lang="scss" scoped>
     .card-panel {
         .card-panel-middle {
-            padding: 54px 0 25px 20px;
+            padding: 54px 20px 25px 20px;
             text-align: left;
             overflow: hidden;
+            font-size: 14px;
             .scale {
                 float: left;
             }
             .chain {
-                float: left;
-                padding-left: 20px;
+                float: right;
             }
             .el-icon-caret-top {
                 color: #8fd96b;
