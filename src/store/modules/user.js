@@ -3,7 +3,7 @@ export default {
     /**
      * 请求令牌
      */
-    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VyTmFtZSI6ImFkbWluIiwiUGFzc1dvcmQiOiIxMjM0NTYiLCJQS0VZIjoiYjc2ZjhmMzZiMjU1MjI1OWFmY2UwNWQ4OGY2NGEwOGMiLCJuYmYiOjE1Nzg2Mjk1MDEsImV4cCI6MTU3ODYzMzEwMSwiaWF0IjoxNTc4NjI5NTAxLCJpc3MiOiJ4a2hpcyIsImF1ZCI6ImlkZW50aXR5In0.hu13xuSLp4tzBH0BI5QDrcZSszNKhjFdvqwNB2EkjaM'
+    token: ''
   },
   namespaced: true,
   actions: {

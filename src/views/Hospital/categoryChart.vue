@@ -48,7 +48,6 @@ export default {
     // 图表初始化数据
     initChart() {
       this.chart = echarts.init(this.$el, "macarons");
-      window.console.log(this.items);
       this.chart.setOption({
         color: ["#3ba1ff"],
         tooltip: {
