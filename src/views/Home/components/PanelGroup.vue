@@ -38,12 +38,11 @@ export default {
     };
   },
   mounted() {
-   this.getOutpatient();
+    this.getOutpatient();
     this.getDrug();
-    this.$nextTick(()=>{
-      this.getCharge();
-    })
     this.getRegistration();
+  //  this.getCharge();
+   
   },
   methods: {
     //门诊收入汇总
@@ -104,57 +103,40 @@ export default {
     },
     //挂号人数
       getRegistration () {
-      this.$http
-        .post("/api/RegulatoryReport/GetRegisteredNumberInfo", {
-          tenantId: 0,
-          summaryDate: this.$store.getters.date
-        })
-        .then(res => {
-          if(this.items.length == 2){
-            this.items = [];
-          }
-          let reg = {};
-          reg.title = "挂号人数";
-          reg.sum = res.peopleNumTotal;
-          reg.devoteY = res.dailyPeopleNumDetail.map(item => item.peopleNumber);
-          reg.devoteX = res.dailyPeopleNumDetail.map(item => item.date);
-          reg.label = '当日挂号量';
-          reg.num = res.dailyPeopleNumTotal;
-          reg.color = "#975fe4";
-          reg.type = "line";
-          this.items.push(reg);
-        })
-        .catch(res => {
-          this.$notify({
-            title: "系统提示",
-            message: res.message,
-            type: "warning"
-          });
-        });
-    },
-    //收费人数
-    getCharge () {
-        this.$http
-        .post("/api/RegulatoryReport/GetChargePeopleNumberInfo", {
-          tenantId: 0,
-          summaryDate: this.$store.getters.date
-        })
-        .then(res => {
-          if(this.items.length == 2){
-            this.items = [];
-          }
-          let reg = {};
-          reg.title = "收费人数";
-          reg.sum = res.peopleNumTotal;
-          reg.devoteY = res.dailyPeopleNumDetail.map(item => item.peopleNumber);
-          reg.devoteX = res.dailyPeopleNumDetail.map(item => item.date);
-          reg.label = '当日收费量';
-          reg.num = res.dailyPeopleNumTotal;
-          reg.color = "#975fe4";
-          reg.type = "line";
-          this.items.push(reg);
-        })
-        .catch(res => {
+        this.items = [];
+        this.axios.all([
+          this.$http
+            .post("/api/RegulatoryReport/GetRegisteredNumberInfo", {
+              tenantId: 0,
+              summaryDate: this.$store.getters.date
+            }),
+          this.$http
+            .post("/api/RegulatoryReport/GetChargePeopleNumberInfo", {
+              tenantId: 0,
+              summaryDate: this.$store.getters.date
+            })
+        ]).then(this.axios.spread((res1,res2)=>{
+            let reg = {};
+            reg.title = "挂号人数";
+            reg.sum = res1.peopleNumTotal || 0;
+            reg.devoteY = (res1.dailyPeopleNumDetail||[]).map(item => item.peopleNumber);
+            reg.devoteX = (res1.dailyPeopleNumDetail||[]).map(item => item.date);
+            reg.label = '日均挂号量';
+            reg.num = res1.dailyPeopleNumTotal || 0;
+            reg.color = "#975fe4";
+            reg.type = "line";
+            this.items.push(reg);
+            reg = {};
+            reg.title = "收费人数";
+            reg.sum = res2.peopleNumTotal || 0;
+            reg.devoteY = (res2.dailyPeopleNumDetail||[]).map(item => item.peopleNumber);
+            reg.devoteX = (res2.dailyPeopleNumDetail||[]).map(item => item.date);
+            reg.label = '日均收费量';
+            reg.num = res2.dailyPeopleNumTotal || 0;
+            reg.color = "#975fe4";
+            reg.type = "line";
+            this.items.push(reg);
+        })).catch(res => {
           this.$notify({
             title: "系统提示",
             message: res.message,

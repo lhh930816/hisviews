@@ -5,7 +5,7 @@
       <div class="page-main">
         <div class="card-panel">
           <div class="card-panel-description">
-            <el-card class="box-card">
+            <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
                 <span>{{list.name}}</span>
                 <span>总额:</span>
@@ -19,16 +19,11 @@
                 <span>元</span>
               </div>
               <div class="box-card-conter">
-                <scatter-chart :items="list.items" />
+                <categoryChart :items="list.items" />
               </div>
             </el-card>
           </div>
         </div>
-        <el-tabs>
-          <el-tab-pane label="村医院当日收入额">
-            <categoryChart :items="data" />
-          </el-tab-pane>
-        </el-tabs>
       </div>
     </div>
   </div>
@@ -58,36 +53,18 @@ export default {
   },
   mounted() {
    this.getData();
-   this.getDay();
   },
   methods: {
     //各村医院月入额
     getData() {
       this.$http
         .post("/api/VillageIncome/IncomeSummary", {
-          tenantId: this.$route.query.id || 0
-        })
-        .then(res => {
-          this.list = res;
-        })
-        .catch(res => {
-          this.$notify({
-            title: "系统提示",
-            message: res.message,
-            type: "warning"
-          });
-        });
-    },
-    //村医院每天收入额
-    getDay(){
-      this.$http
-        .post("/api/TownIncome/DailyDetail", {
-          tenantid: this.$route.query.id || 0,
-           startDate: this.$store.getters.date,
+          tenantId: this.$route.query.id || 0,
+          startDate: this.$store.getters.date,
            endDate: ""
         })
         .then(res => {
-          this.data = res.result.items;
+          this.list = res;
         })
         .catch(res => {
           this.$notify({

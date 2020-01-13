@@ -17,7 +17,7 @@
         </div>
         <div class="card-panel-bottom">
             <el-card  shadow="never">
-                当日总额 <span>&yen;</span><span><count-to :start-val="0" :end-val="item.num" :duration="2600" :decimals='2' class="card-panel-num"/></span>
+                日均总额 <span>&yen;</span><span><count-to :start-val="0" :end-val="item.num" :duration="2600" :decimals='2' class="card-panel-num"/></span>
             </el-card>
         </div>
     </div>

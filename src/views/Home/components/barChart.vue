@@ -38,6 +38,10 @@ export default {
         })
         .then(res => {
           let data = res.outpatientAgeSexRatioDetail;
+          if (data.length == 0) {
+            this.item = [0, 0, 0, 0, 0, 0];
+            this.items = [0, 0, 0, 0, 0, 0];
+          }
           for (let i = 0; i < data.length; i++) {
             let index = 0;
             if (data[i].age <= 18) {
@@ -59,6 +63,7 @@ export default {
               this.items[index] += data[i].peopleTotal;
             }
           }
+
           this.initChart();
         })
         .catch(res => {
@@ -89,7 +94,7 @@ export default {
                 params[0].marker +
                 params[0].seriesName +
                 ":" +
-                Math.abs(params[0].value)
+                Math.abs(params[0].value)+ "人"
               );
               return;
             }
@@ -99,12 +104,12 @@ export default {
               params[0].marker +
               params[0].seriesName +
               ":" +
-              Math.abs(params[0].value) +
+              Math.abs(params[0].value) + "人"+
               "<br/>" +
               params[1].marker +
               params[1].seriesName +
               ":" +
-              Math.abs(params[1].value)
+              Math.abs(params[1].value)+ "人"
             );
           }
         },

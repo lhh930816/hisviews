@@ -81,7 +81,7 @@ export default {
               params[0].marker +
               params[0].seriesName +
               ":" +
-              params[0].value +
+              params[0].value +"人"+
               "<br/>" +
               "同比:" +
               params[0].data.proportion +

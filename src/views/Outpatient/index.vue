@@ -23,7 +23,7 @@
                         <div class="box-card-header">
                             <p>各乡镇门诊每天收入对比图</p>
                             <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" >
-                                <el-menu-item v-for='(v, i) in data.items' :key="i"><a @click="downPage(v.id)" target="_blank">{{v.name}}</a></el-menu-item>
+                                <el-menu-item v-for='(v) in data.items' index="/villages" :key="v.name"><a @click="downPage(v.id)" target="_blank">{{v.name}}</a></el-menu-item>
                             </el-menu>
                         </div>
                         <div class="box-card-conter">
@@ -66,7 +66,6 @@ export default {
         //各村镇的总数据
         getPie(){
             let that = this;
-            console.log(this.$store.getters.date);
             that.$http
                 .post("/api/TownIncome/MonthlySummary", {
                     qid: "",

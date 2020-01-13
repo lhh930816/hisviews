@@ -32,7 +32,7 @@
                   <span>慢性累计费用及人数</span>
                 </div>
                 <div class="box-card-conter">
-                  <line-chart ref="chronic"/>
+                  <line-chart ref="chronic" />
                 </div>
               </el-card>
             </div>
@@ -52,7 +52,7 @@
                       <div class="box-card-top">
                         <span
                           style="display: inline-block; width: 80px; text-align: right; margin-right: 20px;"
-                        >{{item.diseaseRatio.toFixed(2)}}%</span>
+                        >{{(item.diseaseRatio*100).toFixed(2)}}%</span>
                         <span
                           :class="item.diseaseMOY > 0 ? 'box-card-compare':item.diseaseMOY<0?'box-card-compare-span':''"
                         >
@@ -82,7 +82,7 @@
                   <span>慢性病确诊量</span>
                 </div>
                 <div class="box-card-conter">
-                  <week-chart ref="Confirmed"/>
+                  <week-chart ref="Confirmed" />
                 </div>
               </el-card>
             </div>
@@ -98,7 +98,7 @@
                   <span>就诊年龄及性别占比</span>
                 </div>
                 <div class="box-card-conter">
-                  <bar-chart  ref="see"/>
+                  <bar-chart ref="see" />
                 </div>
               </el-card>
             </div>
@@ -112,7 +112,7 @@
                   <span>门诊药品类别占比</span>
                 </div>
                 <div class="box-card-conter">
-                  <dosage-Chart ref="drug"/>
+                  <dosage-Chart ref="drug" />
                 </div>
               </el-card>
             </div>
@@ -133,7 +133,7 @@
                       v-for="(item,index) in data"
                       :key="item.name"
                     >
-                      <pie-chart :item="item.data" :height="height" :width="width"/>
+                      <pie-chart :item="item.data" :height="height" :width="width" />
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -171,21 +171,22 @@ export default {
       width: "342px",
       data: [],
       date: this.$store.getters.date,
-      newDate:this.$store.getters.date
+      newDate: this.$store.getters.date
     };
   },
   created() {
-
     this.getIllness();
     this.getHospitalIncome();
+    this.loading();
   },
   watch: {
     date(val) {
-      let date= formatDate(new Date(val), "yyyy-MM");
+      let date = formatDate(new Date(val), "yyyy-MM");
       this.newDate = date;
-      this.$store.commit("setDate", date);
+      this.$store.commit("setDate", date);
       this.getFun();
-    },
+      this.loading();
+    }
   },
   methods: {
     getFun() {
@@ -194,11 +195,21 @@ export default {
       this.$refs.panel.getOutpatient();
       this.$refs.panel.getDrug();
       this.$refs.panel.getRegistration();
-      this.$refs.panel.getCharge();
       this.$refs.chronic.getdata();
       this.$refs.Confirmed.getConfirmed();
       this.$refs.see.getSee();
       this.$refs.drug.getDosage();
+    },
+    loading() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+      setTimeout(() => {
+        loading.close();
+      }, 5000);
     },
     //疾病
     getIllness() {

@@ -78,7 +78,8 @@ export default {
           axisPointer: {
             // 坐标轴指示器，坐标轴触发有效
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
-          }
+          },
+          formatter: "{b} </br> 类别占比：{c}%"
         },
         grid: {
           top: 25,
@@ -109,7 +110,7 @@ export default {
         ],
         series: [
           {
-            name: "类别",
+            name: "类别占比",
             type: "bar",
             stack: "占比",
             barWidth: "50%",

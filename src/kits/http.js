@@ -14,7 +14,7 @@ switch (process.env.NODE_ENV) {
 
 var opts = {
   baseURL: basrUrl,
-  timeout: 1000 * 6
+  timeout: 1000 * 30
 };
 
 var service = axios.create(opts);

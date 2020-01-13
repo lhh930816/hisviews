@@ -14,7 +14,7 @@ export default {
     },
     Height: {
       type: String,
-      default: "280px"
+      default: "500px"
     },
     items: {
       type: Array,
@@ -30,26 +30,22 @@ export default {
   },
   watch: {
     items(val) {
+      this.data = val.map(item => item.name);
+      this.amounts = val.map(x => x.amount);
       this.$nextTick(() => {
-        let data = (val.map(x => x.items));
-        for(let i = 0;i < data.length; i++){
-         this.data = data[i].map(item => item.name);
-         this.amounts = data[i].map(x => x.amount);
-        }
         this.initChart();
       });
     }
   },
   mounted () {
     this.$nextTick(() => {
-      this.data = this.items.map(x => x.name);
-      this.amounts = this.items.map(x => x.amount);
       this.initChart();
     });
   },
   methods: {
     // 图表初始化数据
     initChart() {
+       
       this.chart = echarts.init(this.$el, "macarons");
       this.chart.setOption({
         color: ["#3ba1ff"],
@@ -75,7 +71,8 @@ export default {
           {
             type: "category",
             data: this.data,
-            axisTick: { alignWithLabel: true }
+            axisTick: { alignWithLabel: true },
+            axisLabel: {interval:0,rotate:50 }
           }
         ],
         yAxis: [{ type: "value" }],

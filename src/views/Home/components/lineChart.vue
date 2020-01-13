@@ -73,7 +73,7 @@ export default {
                     type: 'value'
                 },
                 {
-                    name: '患病人数',
+                    name: '患病人数(人)',
                     nameLocation: 'start',
                     type: 'value',
                     inverse: true
