@@ -16,7 +16,7 @@
         </el-col>
       </el-row>
 
-      <panel-group />
+      <panel-group ref="panel" />
       <el-row :gutter="8" class="page-center">
         <el-col
           :xs="{span: 24}"
@@ -32,7 +32,7 @@
                   <span>慢性累计费用及人数</span>
                 </div>
                 <div class="box-card-conter">
-                  <line-chart />
+                  <line-chart ref="chronic"/>
                 </div>
               </el-card>
             </div>
@@ -82,7 +82,7 @@
                   <span>慢性病确诊量</span>
                 </div>
                 <div class="box-card-conter">
-                  <week-chart />
+                  <week-chart ref="Confirmed"/>
                 </div>
               </el-card>
             </div>
@@ -98,7 +98,7 @@
                   <span>就诊年龄及性别占比</span>
                 </div>
                 <div class="box-card-conter">
-                  <bar-chart />
+                  <bar-chart  ref="see"/>
                 </div>
               </el-card>
             </div>
@@ -112,7 +112,7 @@
                   <span>门诊药品类别占比</span>
                 </div>
                 <div class="box-card-conter">
-                  <dosage-Chart />
+                  <dosage-Chart ref="drug"/>
                 </div>
               </el-card>
             </div>
@@ -133,7 +133,7 @@
                       v-for="(item,index) in data"
                       :key="item.name"
                     >
-                      <pie-chart :item="item.data" :height="height" :width="width" />
+                      <pie-chart :item="item.data" :height="height" :width="width"/>
                     </el-tab-pane>
                   </el-tabs>
                 </div>
@@ -171,10 +171,11 @@ export default {
       width: "342px",
       data: [],
       date: this.$store.getters.date,
-      newDate:""
+      newDate:this.$store.getters.date
     };
   },
-  mounted() {
+  created() {
+
     this.getIllness();
     this.getHospitalIncome();
   },
@@ -182,25 +183,28 @@ export default {
     date(val) {
       let date= formatDate(new Date(val), "yyyy-MM");
       this.newDate = date;
-      this.date = date;
       this.$store.commit("setDate", date);
-    //  this.getFun();
-    this.$nextTick(()=>{
-      this.getIllness();
-      this.getHospitalIncome();
-    })
-   
-    }
+      this.getFun();
+    },
   },
   methods: {
     getFun() {
+      this.getIllness();
+      this.getHospitalIncome();
+      this.$refs.panel.getOutpatient();
+      this.$refs.panel.getDrug();
+      this.$refs.panel.getRegistration();
+      this.$refs.panel.getCharge();
+      this.$refs.chronic.getdata();
+      this.$refs.Confirmed.getConfirmed();
+      this.$refs.see.getSee();
+      this.$refs.drug.getDosage();
     },
     //疾病
     getIllness() {
-       console.log("日期:" +  this.date);
       this.$http
         .post("/api/RegulatoryReport/GetOutpatientDiseaseInfo", {
-          summaryDate: this.date,
+          summaryDate: this.newDate,
           tenantId: 0
         })
         .then(res => {
@@ -218,7 +222,7 @@ export default {
     getHospitalIncome() {
       this.$http
         .post("/api/RegulatoryReport/GetHospitalIncomeRatioInfo", {
-          summaryDate: this.date,
+          summaryDate: this.newDate,
           tenantId: 0
         })
         .then(res => {

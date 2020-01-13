@@ -19,22 +19,28 @@ export default {
     return {
       chart: null,
       item: [],
-      data: []
+      data: [],
+      date: "",
     };
   },
   mounted() {
     this.getDosage();
+    this.date= this.$store.getters.date;
   },
   watch: {
     item() {
       this.$nextTick(() => {
         this.initChart();
       });
+    },
+    date(val){
+      this.data = [];
     }
   },
   methods: {
     //门诊药品类别占比
     getDosage() {
+      this.date = this.$store.getters.date;
       let that = this;
       that.$http
         .post("/api/RegulatoryReport/GetOutpatientDrugCategoryInfo", {

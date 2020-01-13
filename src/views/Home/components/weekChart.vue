@@ -75,7 +75,6 @@ export default {
             type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
           },
           formatter: function(params) {
-            console.log(params);
             return (
               params[0].name +
               "<br/>" +

@@ -66,7 +66,7 @@ export default {
             that.$http
                 .post("/api/DrugIncome/MonthlyDrugSummary", {
                     qid: "",
-                    startDate: new Date(),
+                    startDate: this.$store.getters.date,
                     endDate: ""
                 })
                 .then(res => {
@@ -86,7 +86,7 @@ export default {
             _this.$http
                 .post("/api/DrugIncome/DailyDrugSummary", {
                     qid: "",
-                    startDate: new Date(),
+                    startDate: this.$store.getters.date,
                     endDate: ""
                 })
                 .then(res => {

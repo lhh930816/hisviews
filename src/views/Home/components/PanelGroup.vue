@@ -25,15 +25,20 @@ export default {
     areaChart,
     scaleChart
   },
+  props:{
+    item: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {
       info: [],
-      items: [],
-      date: this.$store.getters.date
+      items: []
     };
   },
   mounted() {
-    this.getOutpatient();
+   this.getOutpatient();
     this.getDrug();
     this.$nextTick(()=>{
       this.getCharge();
@@ -47,9 +52,12 @@ export default {
       that.$http
         .post("/api/RegulatoryReport/GetOutpatientIncomeInfo", {
           tenantId: 0,
-          summaryDate: this.date
+          summaryDate: this.$store.getters.date
         })
         .then(res => {
+          if(that.info.length == 2) {
+            that.info = [];
+          }
           let obj = {};
           obj.title = "门诊收入总额";
           obj.sum = res.monthlyTotal;
@@ -72,9 +80,12 @@ export default {
       _this.$http
         .post("/api/RegulatoryReport/GetDrugIncomeInfo", {
           tenantId: 0,
-          summaryDate: this.date
+          summaryDate: this.$store.getters.date
         })
         .then(res => {
+          if(_this.info.length == 2){
+            _this.info = [];
+          }
           let objs = {};
           objs.title = "药品收入总额";
           objs.sum = res.monthlyTotal;
@@ -96,15 +107,18 @@ export default {
       this.$http
         .post("/api/RegulatoryReport/GetRegisteredNumberInfo", {
           tenantId: 0,
-          summaryDate: this.date
+          summaryDate: this.$store.getters.date
         })
         .then(res => {
+          if(this.items.length == 2){
+            this.items = [];
+          }
           let reg = {};
           reg.title = "挂号人数";
           reg.sum = res.peopleNumTotal;
           reg.devoteY = res.dailyPeopleNumDetail.map(item => item.peopleNumber);
           reg.devoteX = res.dailyPeopleNumDetail.map(item => item.date);
-          reg.label = '日挂号量';
+          reg.label = '当日挂号量';
           reg.num = res.dailyPeopleNumTotal;
           reg.color = "#975fe4";
           reg.type = "line";
@@ -123,15 +137,18 @@ export default {
         this.$http
         .post("/api/RegulatoryReport/GetChargePeopleNumberInfo", {
           tenantId: 0,
-          summaryDate: this.date
+          summaryDate: this.$store.getters.date
         })
         .then(res => {
+          if(this.items.length == 2){
+            this.items = [];
+          }
           let reg = {};
           reg.title = "收费人数";
           reg.sum = res.peopleNumTotal;
           reg.devoteY = res.dailyPeopleNumDetail.map(item => item.peopleNumber);
           reg.devoteX = res.dailyPeopleNumDetail.map(item => item.date);
-          reg.label = '日收费量';
+          reg.label = '当日收费量';
           reg.num = res.dailyPeopleNumTotal;
           reg.color = "#975fe4";
           reg.type = "line";

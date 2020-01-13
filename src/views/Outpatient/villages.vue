@@ -25,7 +25,7 @@
           </div>
         </div>
         <el-tabs>
-          <el-tab-pane label="村医院每天收入额">
+          <el-tab-pane label="村医院当日收入额">
             <categoryChart :items="data" />
           </el-tab-pane>
         </el-tabs>

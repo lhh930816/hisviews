@@ -66,10 +66,11 @@ export default {
         //各村镇的总数据
         getPie(){
             let that = this;
+            console.log(this.$store.getters.date);
             that.$http
                 .post("/api/TownIncome/MonthlySummary", {
                     qid: "",
-                    startDate: this.$moment(this.$store.getters.date).format("YYYY-MM"),
+                    startDate: this.$store.getters.date,
                     endDate: ""
                 })
                 .then(res => {
@@ -89,7 +90,7 @@ export default {
             _this.$http
                 .post("/api/TownIncome/DailySummary", {
                     qid: "",
-                    startDate: this.$moment(this.$store.getters.date).format("YYYY-MM"),
+                    startDate: this.$store.getters.date,
                     endDate: ""
                 })
                 .then(res => {
