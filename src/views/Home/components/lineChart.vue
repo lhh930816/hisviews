@@ -13,6 +13,10 @@ export default {
         Height: {
             type: String,
             default: '542px'
+        },
+        item:{
+            type: Array,
+            default: []
         }
     },
     data() {
@@ -24,11 +28,8 @@ export default {
             list: []
         }
     },
-    mounted() {
-        this.getdata();
-    },
     watch: {
-        items(val){
+        item(val){
             this.cost = val.map(item => item.medicationCosts);
             this.data = val.map(item => item.chronicDiseaseMC);
             this.list = val.map(item => item.chronicDiseaseQuantity);
@@ -109,26 +110,6 @@ export default {
                 }
             ]
         })
-      },
-
-      //慢性累计费用及人数
-      getdata(){
-          let that = this;
-          that.$http
-            .post("/api/RegulatoryReport/GetChronicDiseaseGrandTotalInfo",{
-                summaryDate: this.$store.getters.date,
-                tenantId: 0
-            })
-            .then(res => {
-                that.items = res.chronicDiseaseGrandTotalDetail;
-            })
-            .catch(res => {
-            this.$notify({
-                title: "系统提示",
-                message: res.message,
-                type: "warning"
-             });
-        });  
       }
   }
 }

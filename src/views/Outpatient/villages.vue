@@ -32,7 +32,7 @@
 import CountTo from "vue-count-to";
 import breadcrumb from "@/components/breadcrumb";
 import scatterChart from "@/views/Outpatient/scatterChart";
-import categoryChart from "@/views/Hospital/categoryChart";
+import categoryChart from "@/views/Outpatient/categoryChart";
 import "@/styles/index.scss";
 export default {
   components: {
@@ -60,8 +60,7 @@ export default {
       this.$http
         .post("/api/VillageIncome/IncomeSummary", {
           tenantId: this.$route.query.id || 0,
-          startDate: this.$store.getters.date,
-           endDate: ""
+          date: this.$store.getters.date+"-01",
         })
         .then(res => {
           this.list = res;

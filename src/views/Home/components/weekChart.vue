@@ -17,6 +17,10 @@ export default {
     height: {
       type: String,
       default: "220px"
+    },
+    items: {
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -27,43 +31,25 @@ export default {
       list: []
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.getConfirmed();
-    });
-  },
-  methods: {
-    //慢性病确诊量
-    getConfirmed() {
-      let that = this;
-      that.$http
-        .post("/api/RegulatoryReport/GetOutpatientChronicDiseaseInfo", {
-          summaryDate: this.$store.getters.date,
-          tenantId: 0
-        })
-        .then(res => {
-          that.data = res.outpatientChronicDiseaseDetail.map(
+  //监听items的数据变化
+  watch:{
+    items(val) {
+      this.data = val.map(
             item => item.chronicDiseaseMC
           );
-          that.item = res.outpatientChronicDiseaseDetail.map(item => {
+          this.item = val.map(item => {
             return {
               value: item.chronicDiseaseQuantity,
               proportion: item.chronicDiseaseMOY
             };
           });
-          that.list = res.outpatientChronicDiseaseDetail.map(
+          this.list = val.map(
             item => item.chronicDiseaseMOY
           );
           this.initChart();
-        })
-        .catch(res => {
-          this.$notify({
-            title: "系统提示",
-            message: res.message,
-            type: "warning"
-          });
-        });
-    },
+    }
+  },
+  methods: {
     // 图表初始化数据
     initChart() {
       this.chart = echarts.init(this.$el, "macarons");
@@ -105,7 +91,12 @@ export default {
         yAxis: [
           {
             type: "category",
+            show: true,
             axisTick: {
+              show: false
+            },
+            axisLine: {
+              //y轴
               show: false
             },
             data: this.data

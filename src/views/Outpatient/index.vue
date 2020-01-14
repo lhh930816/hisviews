@@ -69,7 +69,7 @@ export default {
             that.$http
                 .post("/api/TownIncome/MonthlySummary", {
                     qid: "",
-                    startDate: this.$store.getters.date,
+                    startDate: this.$store.getters.date + "-01",
                     endDate: ""
                 })
                 .then(res => {
@@ -89,7 +89,7 @@ export default {
             _this.$http
                 .post("/api/TownIncome/DailySummary", {
                     qid: "",
-                    startDate: this.$store.getters.date,
+                    startDate: this.$store.getters.date + "-01",
                     endDate: ""
                 })
                 .then(res => {

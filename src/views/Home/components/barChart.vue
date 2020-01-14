@@ -13,6 +13,10 @@ export default {
     Height: {
       type: String,
       default: "280px"
+    },
+    list: {
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -22,59 +26,39 @@ export default {
       items: [0, 0, 0, 0, 0, 0]
     };
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.getSee();
+  //监听list的数据
+  watch: {
+    list(val) {
+      let data = val;
+      if (data.length == 0) {
+        this.item = [0, 0, 0, 0, 0, 0];
+        this.items = [0, 0, 0, 0, 0, 0];
+      }
+      for (let i = 0; i < data.length; i++) {
+        let index = 0;
+        if (data[i].age <= 18) {
+          index = 5;
+        } else if (data[i].age <= 30) {
+          index = 4;
+        } else if (data[i].age <= 45) {
+          index = 3;
+        } else if (data[i].age <= 60) {
+          index = 2;
+        } else if (data[i].age <= 70) {
+          index = 1;
+        } else {
+          index = 0;
+        }
+        if (data[i].sex == 1) {
+          this.item[index] -= data[i].peopleTotal;
+        } else if (data[i].sex == 2) {
+          this.items[index] += data[i].peopleTotal;
+        }
+      }
       this.initChart();
-    });
+    }
   },
   methods: {
-    //就诊年龄及性别占比
-    getSee() {
-      this.$http
-        .post("/api/RegulatoryReport/GetOutpatientAgeSexRatioInfo", {
-          summaryDate: this.$store.getters.date,
-          tenantId: 0
-        })
-        .then(res => {
-          let data = res.outpatientAgeSexRatioDetail;
-          if (data.length == 0) {
-            this.item = [0, 0, 0, 0, 0, 0];
-            this.items = [0, 0, 0, 0, 0, 0];
-          }
-          for (let i = 0; i < data.length; i++) {
-            let index = 0;
-            if (data[i].age <= 18) {
-              index = 5;
-            } else if (data[i].age <= 30) {
-              index = 4;
-            } else if (data[i].age <= 45) {
-              index = 3;
-            } else if (data[i].age <= 60) {
-              index = 2;
-            } else if (data[i].age <= 70) {
-              index = 1;
-            } else {
-              index = 0;
-            }
-            if (data[i].sex == 1) {
-              this.item[index] -= data[i].peopleTotal;
-            } else if (data[i].sex == 2) {
-              this.items[index] += data[i].peopleTotal;
-            }
-          }
-
-          this.initChart();
-        })
-        .catch(res => {
-          this.$notify({
-            title: "系统提示",
-            message: res.message,
-            type: "warning"
-          });
-        });
-    },
-
     // 图表初始化数据
     initChart() {
       this.chart = echarts.init(this.$el, "macarons");
@@ -94,7 +78,8 @@ export default {
                 params[0].marker +
                 params[0].seriesName +
                 ":" +
-                Math.abs(params[0].value)+ "人"
+                Math.abs(params[0].value) +
+                "人"
               );
               return;
             }
@@ -104,12 +89,14 @@ export default {
               params[0].marker +
               params[0].seriesName +
               ":" +
-              Math.abs(params[0].value) + "人"+
+              Math.abs(params[0].value) +
+              "人" +
               "<br/>" +
               params[1].marker +
               params[1].seriesName +
               ":" +
-              Math.abs(params[1].value)+ "人"
+              Math.abs(params[1].value) +
+              "人"
             );
           }
         },

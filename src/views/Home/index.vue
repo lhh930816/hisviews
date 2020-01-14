@@ -16,7 +16,7 @@
         </el-col>
       </el-row>
 
-      <panel-group ref="panel" />
+      <panel-group :item="info" :msg="list"/>
       <el-row :gutter="8" class="page-center">
         <el-col
           :xs="{span: 24}"
@@ -32,7 +32,7 @@
                   <span>慢性累计费用及人数</span>
                 </div>
                 <div class="box-card-conter">
-                  <line-chart ref="chronic" />
+                  <line-chart :item="fees"/>
                 </div>
               </el-card>
             </div>
@@ -82,7 +82,7 @@
                   <span>慢性病确诊量</span>
                 </div>
                 <div class="box-card-conter">
-                  <week-chart ref="Confirmed" />
+                  <week-chart :items="Confirmed" />
                 </div>
               </el-card>
             </div>
@@ -98,7 +98,7 @@
                   <span>就诊年龄及性别占比</span>
                 </div>
                 <div class="box-card-conter">
-                  <bar-chart ref="see" />
+                  <bar-chart ref="see" :list="see"/>
                 </div>
               </el-card>
             </div>
@@ -121,7 +121,7 @@
         <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}">
           <div class="card-panel">
             <div class="card-panel-description">
-              <el-card class="box-card">
+              <el-card class="box-card card-main">
                 <div slot="header" class="clearfix">
                   <span>各医院收入占比率</span>
                 </div>
@@ -171,13 +171,16 @@ export default {
       width: "342px",
       data: [],
       date: this.$store.getters.date,
-      newDate: this.$store.getters.date
+      newDate: this.$store.getters.date,
+      info: [],
+      list: [],
+      fees:[],
+      Confirmed:[],
+      see:[]
     };
   },
   created() {
-    this.getIllness();
-    this.getHospitalIncome();
-    this.loading();
+  this.getFun();
   },
   watch: {
     date(val) {
@@ -185,31 +188,173 @@ export default {
       this.newDate = date;
       this.$store.commit("setDate", date);
       this.getFun();
-      this.loading();
+      this.$refs.drug.getDosage();
     }
   },
   methods: {
     getFun() {
       this.getIllness();
       this.getHospitalIncome();
-      this.$refs.panel.getOutpatient();
-      this.$refs.panel.getDrug();
-      this.$refs.panel.getRegistration();
-      this.$refs.chronic.getdata();
-      this.$refs.Confirmed.getConfirmed();
-      this.$refs.see.getSee();
-      this.$refs.drug.getDosage();
+      this.getOutpatient();
+      this.getDrug();
+      this.getRegistration();
+      this.getdata();
+      this.getConfirmed();
+      this.getSee();
+      
     },
-    loading() {
-      const loading = this.$loading({
-        lock: true,
-        text: "Loading",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
-      });
-      setTimeout(() => {
-        loading.close();
-      }, 5000);
+    //门诊收入汇总
+    getOutpatient() {
+      let that = this;
+      that.$http
+        .post("/api/RegulatoryReport/GetOutpatientIncomeInfo", {
+          tenantId: 0,
+          summaryDate: this.$store.getters.date
+        })
+        .then(res => {
+          if(that.info.length == 2) {
+            that.info = [];
+          }
+          let obj = {};
+          obj.title = "门诊收入总额";
+          obj.sum = res.monthlyTotal;
+          obj.scale = res.moy*100;
+          obj.num = res.dailyTotal;
+          obj.chain = res.mom*100;
+          that.info.push(obj);
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
+        });
+    },
+     //药品收入汇总
+    getDrug() {
+      let _this = this;
+      _this.$http
+        .post("/api/RegulatoryReport/GetDrugIncomeInfo", {
+          tenantId: 0,
+          summaryDate: this.$store.getters.date
+        })
+        .then(res => {
+          if(_this.info.length == 2){
+            _this.info = [];
+          }
+          let objs = {};
+          objs.title = "药品收入总额";
+          objs.sum = res.monthlyTotal;
+          objs.scale = res.moy*100;
+          objs.num = res.dailyTotal;
+          objs.chain = res.mom*100;
+          _this.info.push(objs);
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
+        });
+    },
+     //挂号人数,收费人数
+      getRegistration () {
+        this.list = [];
+        this.axios.all([
+          this.$http
+            .post("/api/RegulatoryReport/GetRegisteredNumberInfo", {
+              tenantId: 0,
+              summaryDate: this.$store.getters.date
+            }),
+          this.$http
+            .post("/api/RegulatoryReport/GetChargePeopleNumberInfo", {
+              tenantId: 0,
+              summaryDate: this.$store.getters.date
+            })
+        ]).then(this.axios.spread((res1,res2)=>{
+            let reg = {};
+            reg.title = "挂号人数";
+            reg.sum = res1.peopleNumTotal || 0;
+            reg.devoteY = (res1.dailyPeopleNumDetail||[]).map(item => item.peopleNumber);
+            reg.devoteX = (res1.dailyPeopleNumDetail||[]).map(item => item.date);
+            reg.label = '日均挂号量';
+            reg.num = res1.dailyPeopleNumTotal || 0;
+            reg.color = "#975fe4";
+            reg.type = "line";
+            this.list.push(reg);
+            reg = {};
+            reg.title = "收费人数";
+            reg.sum = res2.peopleNumTotal || 0;
+            reg.devoteY = (res2.dailyPeopleNumDetail||[]).map(item => item.peopleNumber);
+            reg.devoteX = (res2.dailyPeopleNumDetail||[]).map(item => item.date);
+            reg.label = '日均收费量';
+            reg.num = res2.dailyPeopleNumTotal || 0;
+            reg.color = "#975fe4";
+            reg.type = "line";
+            this.list.push(reg);
+        })).catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
+        });
+    },
+      //慢性累计费用及人数
+      getdata(){
+          this.$http
+            .post("/api/RegulatoryReport/GetChronicDiseaseGrandTotalInfo",{
+                summaryDate: this.$store.getters.date,
+                tenantId: 0
+            })
+            .then(res => {
+                this.fees = res.chronicDiseaseGrandTotalDetail;
+            })
+            .catch(res => {
+            this.$notify({
+                title: "系统提示",
+                message: res.message,
+                type: "warning"
+             });
+        });  
+      },
+       //慢性病确诊量
+    getConfirmed() {
+      this.$http
+        .post("/api/RegulatoryReport/GetOutpatientChronicDiseaseInfo", {
+          summaryDate: this.$store.getters.date,
+          tenantId: 0
+        })
+        .then(res => {
+          this.Confirmed = res.outpatientChronicDiseaseDetail;
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
+        });
+    },
+     //就诊年龄及性别占比
+    getSee() {
+      this.$http
+        .post("/api/RegulatoryReport/GetOutpatientAgeSexRatioInfo", {
+          summaryDate: this.$store.getters.date,
+          tenantId: 0
+        })
+        .then(res => {
+          this.see = res.outpatientAgeSexRatioDetail;
+        })
+        .catch(res => {
+          this.$notify({
+            title: "系统提示",
+            message: res.message,
+            type: "warning"
+          });
+        });
     },
     //疾病
     getIllness() {
@@ -259,7 +404,6 @@ export default {
           });
         });
     },
-
     handleClick(tab, event) {
       console.log(tab, event);
     }
@@ -269,7 +413,7 @@ export default {
 <style lang="scss">
 .page-content-wrapper {
   .page-content {
-    padding: 40px 20px;
+    padding:14px 20px 40px 20px;
     .panel-group {
       margin: 0 !important;
       .card-panel-col {
@@ -317,6 +461,11 @@ export default {
         padding-left: 20px !important;
         padding-right: 20px !important;
         .card-panel {
+          .card-main {
+            .el-card__body {
+              height: 280px;
+            }
+          }
           .el-card {
             border-radius: 10px;
             background-color: #ffffff;

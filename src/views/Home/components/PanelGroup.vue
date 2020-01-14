@@ -27,8 +27,12 @@ export default {
   },
   props:{
     item: {
-      type: String,
-      default: ""
+      type: Array,
+      default: []
+    },
+    msg: {
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -37,112 +41,12 @@ export default {
       items: []
     };
   },
-  mounted() {
-    this.getOutpatient();
-    this.getDrug();
-    this.getRegistration();
-  //  this.getCharge();
-   
-  },
-  methods: {
-    //门诊收入汇总
-    getOutpatient() {
-      let that = this;
-      that.$http
-        .post("/api/RegulatoryReport/GetOutpatientIncomeInfo", {
-          tenantId: 0,
-          summaryDate: this.$store.getters.date
-        })
-        .then(res => {
-          if(that.info.length == 2) {
-            that.info = [];
-          }
-          let obj = {};
-          obj.title = "门诊收入总额";
-          obj.sum = res.monthlyTotal;
-          obj.scale = res.moy*100;
-          obj.num = res.dailyTotal;
-          obj.chain = res.mom*100;
-          that.info.push(obj);
-        })
-        .catch(res => {
-          this.$notify({
-            title: "系统提示",
-            message: res.message,
-            type: "warning"
-          });
-        });
+  watch: {
+    item(val){
+      this.info = val;
     },
-    //药品收入汇总
-    getDrug() {
-      let _this = this;
-      _this.$http
-        .post("/api/RegulatoryReport/GetDrugIncomeInfo", {
-          tenantId: 0,
-          summaryDate: this.$store.getters.date
-        })
-        .then(res => {
-          if(_this.info.length == 2){
-            _this.info = [];
-          }
-          let objs = {};
-          objs.title = "药品收入总额";
-          objs.sum = res.monthlyTotal;
-          objs.scale = res.moy*100;
-          objs.num = res.dailyTotal;
-          objs.chain = res.mom*100;
-          _this.info.push(objs);
-        })
-        .catch(res => {
-          this.$notify({
-            title: "系统提示",
-            message: res.message,
-            type: "warning"
-          });
-        });
-    },
-    //挂号人数
-      getRegistration () {
-        this.items = [];
-        this.axios.all([
-          this.$http
-            .post("/api/RegulatoryReport/GetRegisteredNumberInfo", {
-              tenantId: 0,
-              summaryDate: this.$store.getters.date
-            }),
-          this.$http
-            .post("/api/RegulatoryReport/GetChargePeopleNumberInfo", {
-              tenantId: 0,
-              summaryDate: this.$store.getters.date
-            })
-        ]).then(this.axios.spread((res1,res2)=>{
-            let reg = {};
-            reg.title = "挂号人数";
-            reg.sum = res1.peopleNumTotal || 0;
-            reg.devoteY = (res1.dailyPeopleNumDetail||[]).map(item => item.peopleNumber);
-            reg.devoteX = (res1.dailyPeopleNumDetail||[]).map(item => item.date);
-            reg.label = '日均挂号量';
-            reg.num = res1.dailyPeopleNumTotal || 0;
-            reg.color = "#975fe4";
-            reg.type = "line";
-            this.items.push(reg);
-            reg = {};
-            reg.title = "收费人数";
-            reg.sum = res2.peopleNumTotal || 0;
-            reg.devoteY = (res2.dailyPeopleNumDetail||[]).map(item => item.peopleNumber);
-            reg.devoteX = (res2.dailyPeopleNumDetail||[]).map(item => item.date);
-            reg.label = '日均收费量';
-            reg.num = res2.dailyPeopleNumTotal || 0;
-            reg.color = "#975fe4";
-            reg.type = "line";
-            this.items.push(reg);
-        })).catch(res => {
-          this.$notify({
-            title: "系统提示",
-            message: res.message,
-            type: "warning"
-          });
-        });
+    msg(val){
+      this.items = val
     }
   }
 };
