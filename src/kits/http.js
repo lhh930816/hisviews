@@ -8,7 +8,7 @@ switch (process.env.NODE_ENV) {
     basrUrl = "http://localhost:5000";
     break;
   case "production":
-    basrUrl = "http://dlcloudhis.xikang.com/GenerateReport";
+    basrUrl = "http://106.58.171.222:9000/GenerateReport";
     break;
 }
 
