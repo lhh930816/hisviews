@@ -14,9 +14,10 @@ import 'swiper/css/swiper.css'
 import moment from 'moment'
 import http from '@/kits/http'
 import axios from 'axios'
+import './assets/iconfont/iconfont.css'
+
 
 moment.locale('zh-cn')
-
 Vue.config.productionTip = false
 Vue.prototype.$echarts = echarts
 Vue.prototype.$http = http
@@ -25,6 +26,7 @@ Vue.prototype.$moment = moment
 Vue.use(VCharts)
 Vue.use(Vuex)
 Vue.use(vueSwiper)
+
 Vue.use(ElementUI,{
   size: 'small'
 })

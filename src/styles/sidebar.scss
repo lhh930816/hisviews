@@ -1,0 +1,28 @@
+.scrollbar-wrapper {
+    overflow-x: hidden !important;
+}
+.el-scrollbar__bar.is-horizontal {
+    display: none;
+}
+.el-menu {
+    .el-submenu__title {
+        padding-left: 20px;
+        color: rgb(191, 203, 217);
+        background-color: rgb(48, 65, 86);
+        i {
+            color:  rgb(191, 203, 217);
+        }
+    }
+    .el-submenu__title:hover {
+        min-width: 210px !important;
+        background-color: #263445!important;
+    }
+    .el-submenu {
+        text-align: left;
+        .el-menu-item {
+            background-color: #1f2d3d!important;
+        }
+    }
+        
+    
+}

@@ -1,6 +1,5 @@
 <template>
   <div class="app-main">
-
     <transition name="fade-transform" mode="out-in">
       <keep-alive :include="cachedViews">
         <router-view></router-view>

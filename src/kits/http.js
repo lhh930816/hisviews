@@ -5,10 +5,10 @@ import store from "@/store";
 var basrUrl = "";
 switch (process.env.NODE_ENV) {
   case "development":
-    basrUrl = "http://localhost:5000";
+    basrUrl = "/api";
     break;
   case "production":
-    basrUrl = "http://106.58.171.222:9000/GenerateReport";
+    basrUrl = window.g.basrUrl;
     break;
 }
 

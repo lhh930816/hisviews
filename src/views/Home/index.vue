@@ -131,7 +131,7 @@
                       :label="item.name"
                       :name="'tab'+(index+1)"
                       v-for="(item,index) in data"
-                      :key="item.name"
+                      :key="index"
                     >
                       <pie-chart :item="item.data" :height="height" :width="width" />
                     </el-tab-pane>
@@ -180,7 +180,7 @@ export default {
     };
   },
   created() {
-  this.getFun();
+    this.getFun();
   },
   watch: {
     date(val) {
@@ -346,6 +346,7 @@ export default {
           tenantId: 0
         })
         .then(res => {
+
           this.see = res.outpatientAgeSexRatioDetail;
         })
         .catch(res => {
